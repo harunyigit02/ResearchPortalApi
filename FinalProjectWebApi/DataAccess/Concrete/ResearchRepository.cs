@@ -32,7 +32,10 @@ namespace FinalProjectWebApi.DataAccess.Concrete
 
         public async Task<List<Research>> GetAllAsync()
         {
-            return await _context.Researches.ToListAsync();
+            return await _context.Researches
+                .Include(r=>r.Questions)
+                .ThenInclude(q=>q.Options)
+                .ToListAsync();
         }
 
         public async Task<Research> GetByIdAsync(int id)

@@ -18,6 +18,9 @@ namespace FinalProjectWebApi.Business.Concrete
 
         public async Task<Article> AddArticleAsync(Article article)
         {
+            article.TotalViews = 0; // Varsayılan değer 0 olarak ayarlanıyor
+            article.PublishedAt = DateTime.UtcNow;
+
             return await _articleRepository.AddAsync(article);
 
         }

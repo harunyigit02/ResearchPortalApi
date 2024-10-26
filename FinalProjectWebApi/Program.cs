@@ -14,9 +14,15 @@ builder.Services.AddScoped<IResearchService, ResearchService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IResearchRequirementService, ResearchRequirementService>();
 builder.Services.AddScoped<IViewsService, ViewsService>();
+builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<IOptionService, OptionService>();
+
+
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IResearchRepository, ResearchRepository>();
+builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+builder.Services.AddScoped<IOptionRepository, OptionRepository>();
 
 
 

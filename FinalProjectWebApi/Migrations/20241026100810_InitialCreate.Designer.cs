@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinalProjectWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241020082803_RequirementsConflictUpdate")]
-    partial class RequirementsConflictUpdate
+    [Migration("20241026100810_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -74,12 +74,56 @@ namespace FinalProjectWebApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("ParentId")
+                    b.Property<int?>("ParentId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.ToTable("Categories", (string)null);
+                });
+
+            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Option", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("OptionText")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("Options", (string)null);
+                });
+
+            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Question", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("QuestionText")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ResearchId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ResearchId");
+
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Research", b =>
@@ -186,6 +230,28 @@ namespace FinalProjectWebApi.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Option", b =>
+                {
+                    b.HasOne("FinalProjectWebApi.Entities.Concrete.Question", "Question")
+                        .WithMany("Options")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Question", b =>
+                {
+                    b.HasOne("FinalProjectWebApi.Entities.Concrete.Research", "Research")
+                        .WithMany("Questions")
+                        .HasForeignKey("ResearchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Research");
+                });
+
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Research", b =>
                 {
                     b.HasOne("FinalProjectWebApi.Entities.Concrete.Category", "Category")
@@ -217,6 +283,16 @@ namespace FinalProjectWebApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Article");
+                });
+
+            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Question", b =>
+                {
+                    b.Navigation("Options");
+                });
+
+            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Research", b =>
+                {
+                    b.Navigation("Questions");
                 });
 #pragma warning restore 612, 618
         }
