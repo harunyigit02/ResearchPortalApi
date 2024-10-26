@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FinalProjectWebApi.Migrations
 {
-    public partial class RequirementsConflictUpdate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,7 +17,7 @@ namespace FinalProjectWebApi.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    ParentId = table.Column<int>(type: "integer", nullable: false)
+                    ParentId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -94,6 +94,26 @@ namespace FinalProjectWebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Questions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ResearchId = table.Column<int>(type: "integer", nullable: false),
+                    QuestionText = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Questions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Questions_Researches_ResearchId",
+                        column: x => x.ResearchId,
+                        principalTable: "Researches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ResearchRequirements",
                 columns: table => new
                 {
@@ -116,10 +136,40 @@ namespace FinalProjectWebApi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Options",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    QuestionId = table.Column<int>(type: "integer", nullable: false),
+                    OptionText = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Options", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Options_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Articles_CategoryId",
                 table: "Articles",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Options_QuestionId",
+                table: "Options",
+                column: "QuestionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Questions_ResearchId",
+                table: "Questions",
+                column: "ResearchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Researches_CategoryId",
@@ -140,16 +190,22 @@ namespace FinalProjectWebApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Options");
+
+            migrationBuilder.DropTable(
                 name: "ResearchRequirements");
 
             migrationBuilder.DropTable(
                 name: "Views");
 
             migrationBuilder.DropTable(
-                name: "Researches");
+                name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "Articles");
+
+            migrationBuilder.DropTable(
+                name: "Researches");
 
             migrationBuilder.DropTable(
                 name: "Categories");

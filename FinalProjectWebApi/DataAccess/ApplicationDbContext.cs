@@ -16,6 +16,8 @@ namespace FinalProjectWebApi.DataAccess
         public DbSet<Research> Researches { get; set; }
         public DbSet<ResearchRequirement> ResearchRequirements { get; set; }
         public DbSet<Views> Views { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Option> Options { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,8 +28,10 @@ namespace FinalProjectWebApi.DataAccess
             modelBuilder.ApplyConfiguration(new ArticleConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ResearchConfiguration());
-            
-            
+            modelBuilder.ApplyConfiguration(new QuestionConfiguration());
+            modelBuilder.ApplyConfiguration(new OptionConfiguration());
+
+
         }
     }
 

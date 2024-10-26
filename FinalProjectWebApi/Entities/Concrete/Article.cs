@@ -1,9 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace FinalProjectWebApi.Entities.Concrete
 {
     public class Article
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         
@@ -13,7 +17,10 @@ namespace FinalProjectWebApi.Entities.Concrete
         public string Content { get; set; }
         public DateTime PublishedAt { get; set; }
         public int TotalViews { get; set; }
-        public Category Category { get; set; }
+
+        [JsonIgnore]
+        [NotMapped]
+        public Category? Category { get; set; }
 
     }
 }

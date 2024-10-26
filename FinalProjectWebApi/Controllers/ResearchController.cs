@@ -1,4 +1,5 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
+using FinalProjectWebApi.Business.Concrete;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,15 +30,22 @@ namespace FinalProjectWebApi.Controllers
 
         // GET api/<ResearchController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Research>> GetResearchById(int id)
         {
-            return "value";
+            var article = await _researchService.GetResearchByIdAsync(id);
+            if (article == null)
+            {
+                return NotFound(); // 404 Not Found HTTP response
+            }
+            return Ok(article); // 200 OK HTTP response
         }
 
         // POST api/<ResearchController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<Research>> AddResearch(Research research)
         {
+            var createdResearch = await _researchService.AddResearchAsync(research);
+            return CreatedAtAction(nameof(GetResearchById), new { id = createdResearch.Id }, createdResearch); // 201 Created HTTP response
         }
 
         // PUT api/<ResearchController>/5

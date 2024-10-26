@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinalProjectWebApi.Entities.Concrete
 {
     public class Views
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 
         public int Id { get; set; }
 
