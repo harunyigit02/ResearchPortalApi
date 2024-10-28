@@ -139,14 +139,19 @@ namespace FinalProjectWebApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsFaceToFace")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("PublishedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")

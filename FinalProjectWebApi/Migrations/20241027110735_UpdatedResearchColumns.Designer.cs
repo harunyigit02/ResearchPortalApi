@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinalProjectWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241026100810_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241027110735_UpdatedResearchColumns")]
+    partial class UpdatedResearchColumns
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -141,14 +141,19 @@ namespace FinalProjectWebApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsFaceToFace")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("PublishedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
