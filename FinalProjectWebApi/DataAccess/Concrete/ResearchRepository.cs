@@ -37,15 +37,28 @@ namespace FinalProjectWebApi.DataAccess.Concrete
                 .ThenInclude(q=>q.Options)
                 .ToListAsync();
         }
+        public async Task<List<Research>> GetCompletedAsync()
+        {
+            return await _context.Researches
+                .Include(r => r.Questions)
+                .ThenInclude(q => q.Options)
+                .Where(r=>r.IsCompleted)
+                .ToListAsync();
+        }
 
         public async Task<Research> GetByIdAsync(int id)
         {
-            return await _context.Researches.FindAsync(id);
+            return await _context.Researches.Include(r=>r.Questions).ThenInclude(q=>q.Options).FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public Task UpdateAsync(Research research)
+        public async Task UpdateAsync(Research research)
         {
-            throw new NotImplementedException();
+            _context.Researches.Update(research);
+            await _context.SaveChangesAsync();
+            
+
+
+
         }
     }
 }

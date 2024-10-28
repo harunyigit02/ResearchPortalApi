@@ -26,6 +26,12 @@ namespace FinalProjectWebApi.Controllers
             var result = await _researchService.GetResearchesAsync();
             return Ok(result);
         }
+        [HttpGet("/api/Research/Published")]
+        public async Task<ActionResult<IEnumerable<Research>>> GetCompletedResearches()
+        {
+            var result = await _researchService.GetCompletedResearchesAsync();
+            return Ok(result);
+        }
 
 
         // GET api/<ResearchController>/5
@@ -50,8 +56,22 @@ namespace FinalProjectWebApi.Controllers
 
         // PUT api/<ResearchController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> UpdateResearch(int id, [FromBody] Research research)
         {
+            if (id != research.Id)
+            {
+                return BadRequest("Research ID mismatch");
+            }
+
+            try
+            {
+                var updatedResearch = await _researchService.UpdateResearchAsync(id, research);
+                return Ok(updatedResearch);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         // DELETE api/<ResearchController>/5

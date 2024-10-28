@@ -19,6 +19,8 @@ namespace FinalProjectWebApi.Business.Concrete
 
         public async Task<Research> AddResearchAsync(Research research)
         {
+            research.PublishedAt = DateTime.UtcNow;
+            research.IsCompleted = false;
             return await _researchRepository.AddAsync(research);
             
         }
@@ -37,10 +39,31 @@ namespace FinalProjectWebApi.Business.Concrete
         {
             return await _researchRepository.GetAllAsync();
         }
-
-        public Task<Research> UpdateResearchAsync(Research research)
+        public async Task<List<Research>> GetCompletedResearchesAsync()
         {
-            throw new NotImplementedException();
+            return await _researchRepository.GetCompletedAsync();
+        }
+
+        public async Task<Research> UpdateResearchAsync(int id,Research research)
+        {
+            var existingResearch = await _researchRepository.GetByIdAsync(id);
+            if (existingResearch == null)
+            {
+                throw new ArgumentNullException(nameof(existingResearch), "Research not found");
+            }
+
+            // Güncellenmiş özellikleri atama
+            existingResearch.Title = research.Title;
+            existingResearch.Description = research.Description;
+            existingResearch.CategoryId = research.CategoryId;
+            existingResearch.IsCompleted = research.IsCompleted;
+            existingResearch.IsFaceToFace = research.IsFaceToFace;
+
+
+            // Repository üzerinden güncelleme işlemini yap
+            await _researchRepository.UpdateAsync(existingResearch);
+            return existingResearch;
+
         }
     }
 }

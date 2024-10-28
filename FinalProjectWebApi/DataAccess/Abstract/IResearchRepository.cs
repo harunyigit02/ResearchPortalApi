@@ -7,8 +7,10 @@ namespace FinalProjectWebApi.DataAccess.Abstract
 
         Task<Research> GetByIdAsync(int id);
         Task<List<Research>> GetAllAsync();
+        Task<List<Research>> GetCompletedAsync();
+
         Task<Research> AddAsync(Research research);
-        Task UpdateAsync(Research research);
+        Task UpdateAsync( Research research);
         Task DeleteAsync(int id);
     }
 }
