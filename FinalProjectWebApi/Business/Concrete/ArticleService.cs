@@ -1,6 +1,8 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
+using FinalProjectWebApi.Business.Mappings;
 using FinalProjectWebApi.DataAccess;
 using FinalProjectWebApi.DataAccess.Abstract;
+using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +12,12 @@ namespace FinalProjectWebApi.Business.Concrete
     {
 
         private readonly IArticleRepository _articleRepository;
+        private readonly ArticleMapper _mapper;
 
-        public ArticleService(IArticleRepository articleRepository)
+        public ArticleService(IArticleRepository articleRepository,ArticleMapper mapper)
         {
             _articleRepository = articleRepository;
+            _mapper = mapper;
         }
 
         public async Task<Article> AddArticleAsync(Article article)
@@ -48,9 +52,10 @@ namespace FinalProjectWebApi.Business.Concrete
             return await _articleRepository.GetByIdAsync(id);
         }
 
-        public async Task<List<Article>> GetArticlesAsync()
+        public async Task<List<ArticleDto>> GetArticlesAsync()
         {
-            return await _articleRepository.GetAllAsync();
+            var articles = await _articleRepository.GetAllAsync();
+            return await articles.Select(article => _mapper.MapToDto(article)).ToListAsync();
         }
 
         public Task<Article> UpdateArticleAsync(Article article)

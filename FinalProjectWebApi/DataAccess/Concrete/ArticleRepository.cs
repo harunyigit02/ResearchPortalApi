@@ -31,9 +31,9 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             }
         }
 
-        public async Task<List<Article>> GetAllAsync()
+        public async Task<IQueryable<Article>> GetAllAsync()
         {
-            return await _context.Articles.ToListAsync();
+            return _context.Articles.AsQueryable();
         }
 
         public async Task<Article> GetByIdAsync(int id)
