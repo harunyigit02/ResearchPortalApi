@@ -1,11 +1,12 @@
-﻿using FinalProjectWebApi.Entities.Concrete;
+﻿using FinalProjectWebApi.Entities.Abstract;
+using FinalProjectWebApi.Entities.Concrete;
 
 namespace FinalProjectWebApi.Business.Abstract
 {
     public interface IArticleService
     {
 
-        Task<List<Article>> GetArticlesAsync();
+        Task<List<ArticleDto>> GetArticlesAsync();
         Task<Article> GetArticleByIdAsync(int id);
         Task<Article> AddArticleAsync(Article article);
         Task<Article>UpdateArticleAsync(Article article);

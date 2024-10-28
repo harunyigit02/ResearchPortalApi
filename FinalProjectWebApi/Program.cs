@@ -1,5 +1,6 @@
 using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.Business.Concrete;
+using FinalProjectWebApi.Business.Mappings;
 using FinalProjectWebApi.DataAccess;
 using FinalProjectWebApi.DataAccess.Abstract;
 using FinalProjectWebApi.DataAccess.Concrete;
@@ -43,6 +44,7 @@ builder.Services.AddCors(options =>
                           .AllowAnyHeader()
                           .AllowAnyMethod());
 });
+builder.Services.AddTransient<ArticleMapper>();
 
 var app = builder.Build();
 
