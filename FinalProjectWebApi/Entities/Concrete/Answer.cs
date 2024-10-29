@@ -4,17 +4,16 @@ using System.Text.Json.Serialization;
 
 namespace FinalProjectWebApi.Entities.Concrete
 {
-    public class Option
+    public class Answer
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int QuestionId { get; set; }
-        public string OptionText { get; set; }
+        public int OptionId { get; set; }
 
-        // İlişki
+
         [JsonIgnore]
-        public Question? Question { get; set; }
-        public ICollection<Answer>? Answers { get; set; }
+        public Option? Options { get; set; }
+
     }
 }

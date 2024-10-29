@@ -1,0 +1,54 @@
+﻿using FinalProjectWebApi.Business.Abstract;
+using FinalProjectWebApi.DataAccess.Abstract;
+using FinalProjectWebApi.DataAccess.Concrete;
+using FinalProjectWebApi.Entities.Concrete;
+
+namespace FinalProjectWebApi.Business.Concrete
+{
+    public class AnswerService : IAnswerService
+    {
+        private readonly IAnswerRepository _answerRepository;
+        public AnswerService(IAnswerRepository answerRepository) 
+        {
+            _answerRepository = answerRepository;
+        }
+        public async Task<Answer> AddAnswerAsync(Answer answer)
+        {
+              return await _answerRepository.AddAsync(answer);
+             
+        }
+
+        public async Task<Answer> DeleteAnswerAsync(int id)
+        {
+            var answer= await _answerRepository.GetByIdAsync(id);
+            if (answer != null) 
+            {
+                return null;
+            }
+            await _answerRepository.DeleteAsync(id);
+            return answer;
+
+        }
+
+        public Task<Answer> GetAnswerByIdAsync(int id)
+        {
+            return _answerRepository.GetByIdAsync(id);
+        }
+
+        public Task<List<Answer>> GetAnswersAsync()
+        {
+            return _answerRepository.GetAllAsync();
+        }
+
+        public async Task<Answer> UpdateAnswerAsync(int id, Answer answer)
+        {
+            answer = await _answerRepository.GetByIdAsync(id);
+            if (answer != null)
+            {
+                return null;
+            }
+            await _answerRepository.UpdateAsync(id,answer);
+            return answer;
+        }
+    }
+}

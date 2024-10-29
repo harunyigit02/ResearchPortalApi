@@ -22,6 +22,24 @@ namespace FinalProjectWebApi.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Answer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OptionId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OptionId");
+
+                    b.ToTable("Answers", (string)null);
+                });
+
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Article", b =>
                 {
                     b.Property<int>("Id")
@@ -222,6 +240,17 @@ namespace FinalProjectWebApi.Migrations
                     b.ToTable("Views", (string)null);
                 });
 
+            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Answer", b =>
+                {
+                    b.HasOne("FinalProjectWebApi.Entities.Concrete.Option", "Options")
+                        .WithMany("Answers")
+                        .HasForeignKey("OptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Options");
+                });
+
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Article", b =>
                 {
                     b.HasOne("FinalProjectWebApi.Entities.Concrete.Category", "Category")
@@ -286,6 +315,11 @@ namespace FinalProjectWebApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Article");
+                });
+
+            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Option", b =>
+                {
+                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Question", b =>

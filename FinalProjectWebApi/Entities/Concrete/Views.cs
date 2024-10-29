@@ -17,6 +17,6 @@ namespace FinalProjectWebApi.Entities.Concrete
         public int ViewedArticle {  get; set; }
         public DateTime ViewedAt { get; set; }
 
-        public Article Article { get; set; }
+        public Article? Article { get; set; }
     }
 }
