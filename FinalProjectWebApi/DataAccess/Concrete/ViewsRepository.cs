@@ -1,9 +1,10 @@
-﻿using FinalProjectWebApi.Entities.Concrete;
+﻿using FinalProjectWebApi.DataAccess.Abstract;
+using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinalProjectWebApi.DataAccess.Concrete
 {
-    public class ViewsRepository
+    public class ViewsRepository:IViewsRepository
     {
 
         private readonly ApplicationDbContext _context;
@@ -14,6 +15,7 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         }
         public async Task<Views> AddAsync(Views views)
         {
+            views.ViewedAt = DateTime.UtcNow;
             await _context.Views.AddAsync(views);
             await _context.SaveChangesAsync();
             return views;
@@ -39,9 +41,20 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             return await _context.Views.FindAsync(id);
         }
 
-        public Task UpdateAsync(ResearchRequirement researchRequirement)
+        public Task UpdateAsync(Views views)
         {
             throw new NotImplementedException();
+        }
+        public async Task<List<Views>> GetByArticleIdAsync(int articleId)
+        {
+            return await _context.Views
+                .Where(v => v.ViewedArticle == articleId)
+                .ToListAsync();
+        }
+        public async Task<int> GetViewsCountByArticleIdAsync(int articleId)
+        {
+            return await _context.Views
+                .CountAsync(v => v.ViewedArticle == articleId);
         }
     }
 }

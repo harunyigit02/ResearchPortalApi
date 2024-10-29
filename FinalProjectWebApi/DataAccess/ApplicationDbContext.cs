@@ -18,6 +18,8 @@ namespace FinalProjectWebApi.DataAccess
         public DbSet<Views> Views { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Option> Options { get; set; }
+        public DbSet<Answer> Answers { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -30,6 +32,7 @@ namespace FinalProjectWebApi.DataAccess
             modelBuilder.ApplyConfiguration(new ResearchConfiguration());
             modelBuilder.ApplyConfiguration(new QuestionConfiguration());
             modelBuilder.ApplyConfiguration(new OptionConfiguration());
+            modelBuilder.ApplyConfiguration(new AnswerConfiguration());
 
 
         }

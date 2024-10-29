@@ -16,6 +16,7 @@ namespace FinalProjectWebApi.DataAccess.Concrete
 
         public async Task<Article> AddAsync(Article article)
         {
+            
             await _context.Articles.AddAsync(article);
             await _context.SaveChangesAsync();
             return article;

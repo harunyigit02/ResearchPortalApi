@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinalProjectWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241027110735_UpdatedResearchColumns")]
-    partial class UpdatedResearchColumns
+    [Migration("20241029142507_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,24 @@ namespace FinalProjectWebApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Answer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OptionId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OptionId");
+
+                    b.ToTable("Answers", (string)null);
+                });
 
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Article", b =>
                 {
@@ -224,6 +242,17 @@ namespace FinalProjectWebApi.Migrations
                     b.ToTable("Views", (string)null);
                 });
 
+            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Answer", b =>
+                {
+                    b.HasOne("FinalProjectWebApi.Entities.Concrete.Option", "Options")
+                        .WithMany("Answers")
+                        .HasForeignKey("OptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Options");
+                });
+
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Article", b =>
                 {
                     b.HasOne("FinalProjectWebApi.Entities.Concrete.Category", "Category")
@@ -288,6 +317,11 @@ namespace FinalProjectWebApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Article");
+                });
+
+            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Option", b =>
+                {
+                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Question", b =>
