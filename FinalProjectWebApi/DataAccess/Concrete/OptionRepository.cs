@@ -31,12 +31,12 @@ namespace FinalProjectWebApi.DataAccess.Concrete
 
         public async Task<List<Option>> GetAllAsync()
         {
-            return await _context.Options.ToListAsync();
+            return await _context.Options.Include(o=>o.Answers).ToListAsync();
         }
 
         public async Task<Option> GetByIdAsync(int id)
         {
-            return await _context.Options.FindAsync(id);
+            return await _context.Options.Include(o => o.Answers).FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task UpdateAsync(Option option)

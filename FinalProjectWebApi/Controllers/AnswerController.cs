@@ -47,6 +47,27 @@ namespace FinalProjectWebApi.Controllers
             return CreatedAtAction(nameof(GetAnswerById), new { id = createdAnswer.Id }, createdAnswer); // 201 Created HTTP response
         }
 
+        [HttpPost("submitAnswers")]
+        public async Task<IActionResult> SubmitAnswers([FromBody] List<Answer> answers)
+        {
+            if (answers == null || answers.Count == 0)
+            {
+                return BadRequest("Geçersiz veri.");
+            }
+
+            try
+            {
+                await _answerService.AddAnswersAsync(answers);
+                return Ok(answers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Veri kaydetme işlemi başarısız oldu: {ex.Message}");
+            }
+        }
+
+
+
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
         public async Task<Answer> UpdateAnswer(int id,Answer answer) 

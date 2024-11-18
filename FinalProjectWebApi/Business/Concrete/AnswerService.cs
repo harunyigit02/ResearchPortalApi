@@ -17,6 +17,15 @@ namespace FinalProjectWebApi.Business.Concrete
               return await _answerRepository.AddAsync(answer);
              
         }
+        public async Task<List<Answer>> AddAnswersAsync(List<Answer> answers)
+        {
+            if (answers == null || answers.Count == 0)
+            {
+                throw new ArgumentException("Answer list cannot be null or empty.");
+            }
+
+             return await _answerRepository.AddAnswersAsync(answers);
+        }
 
         public async Task<Answer> DeleteAnswerAsync(int id)
         {
