@@ -57,6 +57,16 @@ namespace FinalProjectWebApi.Business.Concrete
             var articles = await _articleRepository.GetAllAsync();
             return await articles.Select(article => _mapper.MapToDto(article)).ToListAsync();
         }
+        public async Task<List<ArticleDto>> GetArticlesByUserIdAsync(int userId)
+        {
+            // Kullanıcıya ait makaleleri repository katmanından alıyoruz
+            var articles = await _articleRepository.GetArticlesByUserIdAsync(userId);
+
+            // İş mantığı ve dönüşüm işlemleri yapılabilir
+            var articleDtos = articles.Select(article => _mapper.MapToDto(article)).ToList();
+
+            return articleDtos;
+        }
 
         public Task<Article> UpdateArticleAsync(Article article)
         {

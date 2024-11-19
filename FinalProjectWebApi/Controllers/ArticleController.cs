@@ -1,7 +1,9 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.Business.Concrete;
 using FinalProjectWebApi.Entities.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,11 +15,13 @@ namespace FinalProjectWebApi.Controllers
     {
 
         private readonly IArticleService _articleService;
+        private readonly ILogger<ArticleController> _logger;
 
-        public ArticleController(IArticleService articleService) 
+
+        public ArticleController(IArticleService articleService, ILogger<ArticleController> logger) 
         {
             _articleService = articleService;
-
+            _logger = logger;
         }
         // GET: api/<ArticleController>
         [HttpGet]
@@ -39,13 +43,39 @@ namespace FinalProjectWebApi.Controllers
             }
             return Ok(article); // 200 OK HTTP response
         }
+        [Authorize]
+        [HttpGet("GetMyArticles")]
+        public async Task<IActionResult> GetMyArticles()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            var articles = await _articleService.GetArticlesByUserIdAsync(int.Parse(userId));
+            return Ok(articles);
+        }
 
         // POST api/<ArticleController>
+        [Authorize]  // Sadece doğrulanmış kullanıcıların erişebilmesi için
         [HttpPost]
         public async Task<ActionResult<Article>> AddArticle(Article article)
         {
+            // Kullanıcıyı kimlik doğrulama token'ından alıyoruz
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // JWT token'dan userId alıyoruz
+            _logger.LogWarning("UserId:"+userId);
+            if (userId == null)
+            {
+                return Unauthorized("Geçersiz kullanıcı");
+            }
+
+            // Makale bilgilerine userId ekliyoruz
+            article.PublishedBy = int.Parse(userId);  // veya uygun dönüşümü yapın
+
             var createdArticle = await _articleService.AddArticleAsync(article);
-            return CreatedAtAction(nameof(GetArticle), new { id = createdArticle.Id }, createdArticle); // 201 Created HTTP response
+            return CreatedAtAction(nameof(GetArticle), new { id = createdArticle.Id }, createdArticle);
         }
 
 

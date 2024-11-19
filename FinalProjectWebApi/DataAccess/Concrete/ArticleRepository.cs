@@ -41,6 +41,11 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         {
             return await _context.Articles.FindAsync(id);
         }
+        public async Task<IQueryable<Article>> GetArticlesByUserIdAsync(int userId)
+        {
+            return _context.Articles
+                .Where(a => a.PublishedBy == userId).AsQueryable();  // Veritabanında filtreleme
+        }
 
         public async Task UpdateAsync( Article article)
         {

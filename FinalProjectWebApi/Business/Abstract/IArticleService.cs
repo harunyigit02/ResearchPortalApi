@@ -7,6 +7,7 @@ namespace FinalProjectWebApi.Business.Abstract
     {
 
         Task<List<ArticleDto>> GetArticlesAsync();
+        Task<List<ArticleDto>> GetArticlesByUserIdAsync(int userId);
         Task<Article> GetArticleByIdAsync(int id);
         Task<Article> AddArticleAsync(Article article);
         Task<Article>UpdateArticleAsync(Article article);

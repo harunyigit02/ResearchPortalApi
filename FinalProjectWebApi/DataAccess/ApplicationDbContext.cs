@@ -34,6 +34,7 @@ namespace FinalProjectWebApi.DataAccess
             modelBuilder.ApplyConfiguration(new QuestionConfiguration());
             modelBuilder.ApplyConfiguration(new OptionConfiguration());
             modelBuilder.ApplyConfiguration(new AnswerConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
 
 
         }

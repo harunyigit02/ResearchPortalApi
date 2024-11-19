@@ -18,6 +18,13 @@ namespace FinalProjectWebApi.DataAccess.Configurations
                   .OnDelete(DeleteBehavior.SetNull)
                   .HasPrincipalKey(x => x.Id);
 
+            builder.HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.PublishedBy)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasPrincipalKey(x => x.Id);
+
+
             builder.Property(a => a.TotalViews)
                    .HasDefaultValue(0);
 

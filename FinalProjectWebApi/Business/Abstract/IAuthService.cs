@@ -1,8 +1,11 @@
-﻿namespace FinalProjectWebApi.Business.Abstract
+﻿using FinalProjectWebApi.Entities.Concrete;
+
+namespace FinalProjectWebApi.Business.Abstract
 {
     public interface IAuthService
     {
-        Task<string> Register(string username, string password);
-        Task<string> Login(string username, string password);
+        Task Register(string email, string password);
+        Task<string> Login(string email, string password);
+        Task<List<User>> GetUsersAsync();
     }
 }

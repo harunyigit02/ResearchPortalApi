@@ -13,6 +13,10 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         {
             _context = context;
         }
+        public async Task<List<User>> GetAllAsync()
+        {
+            return await _context.Users.ToListAsync();
+        }
 
         public async Task<User> GetUserByUserName(string email)
         {

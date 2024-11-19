@@ -20,7 +20,7 @@ namespace FinalProjectWebApi.Business.Concrete
             _configuration = configuration;
         }
 
-        public async Task<string> Register(string email, string password)
+        public async Task Register(string email, string password)
         {
             // Kullanıcı zaten var mı kontrol et
             if (await _authRepository.GetUserByUserName(email) != null)
@@ -40,7 +40,6 @@ namespace FinalProjectWebApi.Business.Concrete
 
             // Kullanıcıyı kaydet
             await _authRepository.AddUser(user);
-            return GenerateToken(user);
         }
 
         public async Task<string> Login(string username, string password)
@@ -55,6 +54,7 @@ namespace FinalProjectWebApi.Business.Concrete
             if (!computedHash.SequenceEqual(user.PasswordHash))
                 throw new Exception("Şifre yanlış.");
 
+            // Token döndür
             return GenerateToken(user);
         }
 
@@ -76,6 +76,11 @@ namespace FinalProjectWebApi.Business.Concrete
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<List<User>> GetUsersAsync()
+        {
+             return await _authRepository.GetAllAsync();
         }
     }
 

@@ -6,6 +6,7 @@ namespace FinalProjectWebApi.DataAccess.Abstract
     {
         Task<Article> GetByIdAsync(int id);
         Task<IQueryable<Article>> GetAllAsync();
+        Task<IQueryable<Article>> GetArticlesByUserIdAsync(int userId);
         Task<Article> AddAsync(Article article);
         Task UpdateAsync( Article article);
         Task DeleteAsync(int id);
