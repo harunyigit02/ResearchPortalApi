@@ -20,8 +20,8 @@ namespace FinalProjectWebApi.Controllers
         {
             try
             {
-                var token = await _authService.Register(registerDto.Email, registerDto.Password);
-                return Ok(new { token });
+                 await _authService.Register(registerDto.Email, registerDto.Password);
+                return Ok(registerDto);
             }
             catch (Exception ex)
             {
@@ -41,6 +41,13 @@ namespace FinalProjectWebApi.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        [HttpGet("Users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var users= await _authService.GetUsersAsync();
+            return Ok(users);
         }
     }
 }
