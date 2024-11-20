@@ -5,6 +5,7 @@ using FinalProjectWebApi.DataAccess.Abstract;
 using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace FinalProjectWebApi.Business.Concrete
 {
@@ -22,6 +23,7 @@ namespace FinalProjectWebApi.Business.Concrete
 
         public async Task<Article> AddArticleAsync(Article article)
         {
+            
             article.TotalViews = 0; // Varsayılan değer 0 olarak ayarlanıyor
             article.PublishedAt = DateTime.UtcNow;
 

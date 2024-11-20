@@ -74,14 +74,11 @@ namespace FinalProjectWebApi.Migrations
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("PublishedBy");
 
                     b.ToTable("Articles", (string)null);
                 });
@@ -250,7 +247,7 @@ namespace FinalProjectWebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Views", b =>
@@ -298,8 +295,8 @@ namespace FinalProjectWebApi.Migrations
 
                     b.HasOne("FinalProjectWebApi.Entities.Concrete.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("PublishedBy")
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("Category");
