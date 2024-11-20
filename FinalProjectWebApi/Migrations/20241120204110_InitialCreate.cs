@@ -73,13 +73,12 @@ namespace FinalProjectWebApi.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CategoryId = table.Column<int>(type: "integer", nullable: false),
-                    PublishedBy = table.Column<int>(type: "integer", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     Content = table.Column<string>(type: "text", nullable: false),
+                    PublishedBy = table.Column<int>(type: "integer", nullable: false),
                     PublishedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    TotalViews = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
-                    UserId = table.Column<int>(type: "integer", nullable: false)
+                    TotalViews = table.Column<int>(type: "integer", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
@@ -91,11 +90,11 @@ namespace FinalProjectWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Articles_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Articles_Users_PublishedBy",
+                        column: x => x.PublishedBy,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -212,9 +211,9 @@ namespace FinalProjectWebApi.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Articles_UserId",
+                name: "IX_Articles_PublishedBy",
                 table: "Articles",
-                column: "UserId");
+                column: "PublishedBy");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Options_QuestionId",

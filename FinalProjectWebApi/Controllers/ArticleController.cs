@@ -1,6 +1,7 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.Business.Concrete;
 using FinalProjectWebApi.Entities.Concrete;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -43,8 +44,8 @@ namespace FinalProjectWebApi.Controllers
             }
             return Ok(article); // 200 OK HTTP response
         }
-        [Authorize]
-        [HttpGet("GetMyArticles")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("MyArticles")]
         public async Task<IActionResult> GetMyArticles()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -59,7 +60,7 @@ namespace FinalProjectWebApi.Controllers
         }
 
         // POST api/<ArticleController>
-        [Authorize]  // Sadece doğrulanmış kullanıcıların erişebilmesi için
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]  // Sadece doğrulanmış kullanıcıların erişebilmesi için
         [HttpPost]
         public async Task<ActionResult<Article>> AddArticle(Article article)
         {
