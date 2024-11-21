@@ -1,6 +1,8 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.DataAccess;
 using FinalProjectWebApi.DataAccess.Abstract;
+using FinalProjectWebApi.DataAccess.Concrete;
+using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +35,16 @@ namespace FinalProjectWebApi.Business.Concrete
         public async Task<Research> GetResearchByIdAsync(int id)
         {
             return await _researchRepository.GetByIdAsync(id);
+        }
+        public async Task<List<Research>> GetResearchesByUserIdAsync(int userId)
+        {
+            // Kullanıcıya ait makaleleri repository katmanından alıyoruz
+            var researches = await _researchRepository.GetByUserIdAsync(userId);
+
+            // İş mantığı ve dönüşüm işlemleri yapılabilir
+            
+
+            return researches;
         }
 
         public async Task<List<Research>> GetResearchesAsync()

@@ -16,6 +16,7 @@ namespace FinalProjectWebApi.Entities.Concrete
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime? EndDate { get; set; }
+        public int PublishedBy { get; set; }
         public DateTime PublishedAt { get; set; }
         public string? Status { get; set; }
 
@@ -25,8 +26,10 @@ namespace FinalProjectWebApi.Entities.Concrete
 
         [JsonIgnore]
         public Category? Category { get; set; }
+        [JsonIgnore]
+        public User? User { get; set; }
 
-        
+
         public ICollection<Question>? Questions { get; set; }
     }
 }

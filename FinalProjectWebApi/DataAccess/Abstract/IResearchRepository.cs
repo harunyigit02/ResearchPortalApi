@@ -6,6 +6,7 @@ namespace FinalProjectWebApi.DataAccess.Abstract
     {
 
         Task<Research> GetByIdAsync(int id);
+        Task<List<Research>> GetByUserIdAsync(int userId);
         Task<List<Research>> GetAllAsync();
         Task<List<Research>> GetCompletedAsync();
 

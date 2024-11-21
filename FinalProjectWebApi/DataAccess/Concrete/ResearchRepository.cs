@@ -50,6 +50,11 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         {
             return await _context.Researches.Include(r=>r.Questions).ThenInclude(q=>q.Options).FirstOrDefaultAsync(r => r.Id == id);
         }
+        public async Task<List<Research>> GetByUserIdAsync(int userId)
+        {
+            return _context.Researches
+                .Where(a => a.PublishedBy == userId).ToList();  // Veritabanında filtreleme
+        }
 
         public async Task UpdateAsync(Research research)
         {

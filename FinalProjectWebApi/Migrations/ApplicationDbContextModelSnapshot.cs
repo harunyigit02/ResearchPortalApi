@@ -174,6 +174,9 @@ namespace FinalProjectWebApi.Migrations
                     b.Property<DateTime>("PublishedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("PublishedBy")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Status")
                         .HasColumnType("text");
 
@@ -184,6 +187,8 @@ namespace FinalProjectWebApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("PublishedBy");
 
                     b.ToTable("Researches", (string)null);
                 });
@@ -334,7 +339,15 @@ namespace FinalProjectWebApi.Migrations
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
+                    b.HasOne("FinalProjectWebApi.Entities.Concrete.User", "User")
+                        .WithMany()
+                        .HasForeignKey("PublishedBy")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.ResearchRequirement", b =>

@@ -1,7 +1,10 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.Business.Concrete;
 using FinalProjectWebApi.Entities.Concrete;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,6 +29,22 @@ namespace FinalProjectWebApi.Controllers
             var result = await _researchService.GetResearchesAsync();
             return Ok(result);
         }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("MyResearches")]
+        public async Task<IActionResult> GetMyResearches()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            var articles = await _researchService.GetResearchesByUserIdAsync(int.Parse(userId));
+            return Ok(articles);
+        }
+
         [HttpGet("/api/Research/Published")]
         public async Task<ActionResult<IEnumerable<Research>>> GetCompletedResearches()
         {
@@ -47,9 +66,20 @@ namespace FinalProjectWebApi.Controllers
         }
 
         // POST api/<ResearchController>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public async Task<ActionResult<Research>> AddResearch(Research research)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // JWT token'dan userId alıyoruz
+
+            if (userId == null)
+            {
+                return Unauthorized("Geçersiz kullanıcı");
+            }
+
+            // Makale bilgilerine userId ekliyoruz
+            research.PublishedBy = int.Parse(userId);  // veya uygun dönüşümü yapın
+
             var createdResearch = await _researchService.AddResearchAsync(research);
             return CreatedAtAction(nameof(GetResearchById), new { id = createdResearch.Id }, createdResearch); // 201 Created HTTP response
         }
