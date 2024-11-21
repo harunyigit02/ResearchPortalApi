@@ -6,6 +6,7 @@ namespace FinalProjectWebApi.Business.Abstract
     {
 
         Task<List<Research>> GetResearchesAsync();
+        Task<List<Research>> GetResearchesByUserIdAsync(int userId);
         Task<List<Research>> GetCompletedResearchesAsync();
         Task<Research> GetResearchByIdAsync(int id);
         Task<Research> AddResearchAsync(Research research);

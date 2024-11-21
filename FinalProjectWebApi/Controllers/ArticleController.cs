@@ -66,7 +66,7 @@ namespace FinalProjectWebApi.Controllers
         {
             // Kullanıcıyı kimlik doğrulama token'ından alıyoruz
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // JWT token'dan userId alıyoruz
-            _logger.LogWarning("UserId:"+userId);
+            
             if (userId == null)
             {
                 return Unauthorized("Geçersiz kullanıcı");
