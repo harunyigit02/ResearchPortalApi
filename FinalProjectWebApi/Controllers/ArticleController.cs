@@ -44,15 +44,20 @@ namespace FinalProjectWebApi.Controllers
             }
             return Ok(article); // 200 OK HTTP response
         }
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpGet("MyArticles")]
-        public async Task<IActionResult> GetMyArticles()
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles ="Admin,Researcher")]
+        [HttpGet("UserArticles")]
+        public async Task<IActionResult> GetUserArticles()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
 
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized();
+            }
+            if(role == "Admin" ||  role == "Researcher")
+            {
+                return Forbid();
             }
 
             var articles = await _articleService.GetArticlesByUserIdAsync(int.Parse(userId));
@@ -60,16 +65,20 @@ namespace FinalProjectWebApi.Controllers
         }
 
         // POST api/<ArticleController>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]  // Sadece doğrulanmış kullanıcıların erişebilmesi için
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Researcher")]  // Sadece doğrulanmış kullanıcıların erişebilmesi için
         [HttpPost]
         public async Task<ActionResult<Article>> AddArticle(Article article)
         {
             // Kullanıcıyı kimlik doğrulama token'ından alıyoruz
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // JWT token'dan userId alıyoruz
-            
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
             if (userId == null)
             {
                 return Unauthorized("Geçersiz kullanıcı");
+            }
+            if (role == "Admin" || role == "Researcher")
+            {
+                return Forbid();
             }
 
             // Makale bilgilerine userId ekliyoruz

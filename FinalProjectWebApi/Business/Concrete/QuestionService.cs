@@ -1,5 +1,6 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.DataAccess.Abstract;
+using FinalProjectWebApi.DataAccess.Concrete;
 using FinalProjectWebApi.Entities.Concrete;
 
 namespace FinalProjectWebApi.Business.Concrete
@@ -7,10 +8,13 @@ namespace FinalProjectWebApi.Business.Concrete
     public class QuestionService : IQuestionService
     {
         private readonly IQuestionRepository _questionRepository;
+        private readonly IResearchRepository _researchRepository;
 
-        public QuestionService(IQuestionRepository questionRepository)
+
+        public QuestionService(IQuestionRepository questionRepository, IResearchRepository researchRepository)
         {
             _questionRepository = questionRepository;
+            _researchRepository = researchRepository;
         }
 
         public async Task<Question> AddQuestionAsync(Question question)
@@ -19,6 +23,13 @@ namespace FinalProjectWebApi.Business.Concrete
 
             return await _questionRepository.AddAsync(question);
 
+        }
+        public async Task<bool> IsUserAuthorizedForResearchAsync(int userId,Question question)
+        {
+            
+            var research = await _researchRepository.GetByIdAsync(question.ResearchId);
+
+            return research != null && research.PublishedBy == userId;
         }
 
         public async Task<Question> DeleteQuestionAsync(int id)

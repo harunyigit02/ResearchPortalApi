@@ -1,7 +1,10 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.Business.Concrete;
 using FinalProjectWebApi.Entities.Concrete;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FinalProjectWebApi.Controllers
 {
@@ -39,10 +42,27 @@ namespace FinalProjectWebApi.Controllers
 
         // POST api/<CategoryController>
         // POST api/<ArticleController>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Researcher")]
         [HttpPost]
-        public async Task<ActionResult<Question>> AddQuestion(Question question)
+        public async Task<IActionResult> AddQuestion(Question question)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            // Kullanıcının araştırmaya yetkili olup olmadığını kontrol et
+            var isAuthorized = await _questionService.IsUserAuthorizedForResearchAsync(int.Parse(userId), question);
+            if (!isAuthorized)
+            {
+                return Forbid(); // Kullanıcının yetkisi yok
+            }
+
+            // Yetki doğrulandıktan sonra soruyu ekle
             var createdQuestion = await _questionService.AddQuestionAsync(question);
+
             return CreatedAtAction(nameof(GetQuestionById), new { id = createdQuestion.Id }, createdQuestion); // 201 Created HTTP response
         }
 

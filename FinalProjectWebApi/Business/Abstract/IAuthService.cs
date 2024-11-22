@@ -7,5 +7,6 @@ namespace FinalProjectWebApi.Business.Abstract
         Task Register(string email, string password);
         Task<string> Login(string email, string password);
         Task<List<User>> GetUsersAsync();
+        Task UpdateUserRoleAsync(int userId, string newRole);
     }
 }

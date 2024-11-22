@@ -9,5 +9,6 @@ namespace FinalProjectWebApi.Business.Abstract
         Task<Question> AddQuestionAsync(Question question);
         Task<Question> UpdateQuestionAsync(Question question);
         Task<Question> DeleteQuestionAsync(int id);
+        Task<bool> IsUserAuthorizedForResearchAsync(int userId, Question question);
     }
 }
