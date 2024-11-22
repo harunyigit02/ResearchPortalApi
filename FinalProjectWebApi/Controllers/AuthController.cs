@@ -1,6 +1,8 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.Entities.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FinalProjectWebApi.Controllers
 {
@@ -48,6 +50,34 @@ namespace FinalProjectWebApi.Controllers
         {
             var users= await _authService.GetUsersAsync();
             return Ok(users);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("UpdateUserRole/{userId}")]
+        public async Task<IActionResult> UpdateUserRole(int userId, [FromBody] RoleUpdateRequest request)
+        {
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value; // JWT token'dan kullanıcının rolünü alıyoruz
+            if (userRole != "Admin")
+            {
+                return Unauthorized("Bu işlem için admin yetkisine sahip olmanız gerekiyor");
+            }
+
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value); // JWT'den geçerli userId alıyoruz
+            if (currentUserId == userId) // Eğer admin kendi rolünü değiştirmeye çalışıyorsa
+            {
+                return BadRequest("Admin kendi rolünü değiştiremez");
+            }
+
+            try
+            {
+                // Kullanıcının rolünü admin değiştirebilir
+                await _authService.UpdateUserRoleAsync(userId, request.NewRole);
+                return Ok("Kullanıcı rolü başarıyla güncellendi");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Hata: {ex.Message}");
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ namespace FinalProjectWebApi.Entities.Concrete
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int OptionId { get; set; }
+        
 
 
         [JsonIgnore]

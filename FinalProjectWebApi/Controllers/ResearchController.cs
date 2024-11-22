@@ -30,19 +30,24 @@ namespace FinalProjectWebApi.Controllers
             return Ok(result);
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpGet("MyResearches")]
-        public async Task<IActionResult> GetMyResearches()
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles ="Admin,Researcher")]
+        [HttpGet("UserResearches")]
+        public async Task<IActionResult> GetUserResearches()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
 
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized();
             }
+            if (role != "Admin"&& role != "Researcher")
+            {
+                return Forbid();
+            }
 
-            var articles = await _researchService.GetResearchesByUserIdAsync(int.Parse(userId));
-            return Ok(articles);
+            var researches = await _researchService.GetResearchesByUserIdAsync(int.Parse(userId));
+            return Ok(researches);
         }
 
         [HttpGet("/api/Research/Published")]
@@ -66,15 +71,19 @@ namespace FinalProjectWebApi.Controllers
         }
 
         // POST api/<ResearchController>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Researcher")]
         [HttpPost]
         public async Task<ActionResult<Research>> AddResearch(Research research)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // JWT token'dan userId alıyoruz
-
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
             if (userId == null)
             {
                 return Unauthorized("Geçersiz kullanıcı");
+            }
+            if (role != "Admin" && role != "Researcher")
+            {
+                return Forbid();
             }
 
             // Makale bilgilerine userId ekliyoruz

@@ -1,6 +1,9 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FinalProjectWebApi.Controllers
 {
@@ -10,10 +13,13 @@ namespace FinalProjectWebApi.Controllers
     {
 
         private readonly IOptionService _optionService;
+        private readonly IQuestionService _questionService;
+        
 
-        public OptionController(IOptionService optionService)
+        public OptionController(IOptionService optionService, IQuestionService questionService)
         {
             _optionService = optionService;
+            _questionService = questionService;
 
         }
         // GET: api/<CategoryController>
@@ -38,9 +44,22 @@ namespace FinalProjectWebApi.Controllers
 
         // POST api/<CategoryController>
         // POST api/<ArticleController>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Researcher")]
         [HttpPost]
         public async Task<ActionResult<Option>> AddOption(Option option)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+            var question= await _questionService.GetQuestionByIdAsync(option.QuestionId);
+            var isAuthorized= await _questionService.IsUserAuthorizedForResearchAsync(int.Parse(userId),question);
+            if (!isAuthorized) 
+            {
+                return Forbid();
+            }
+
             var createdOption = await _optionService.AddOptionAsync(option);
             return CreatedAtAction(nameof(GetOptionById), new { id = createdOption.Id }, createdOption); // 201 Created HTTP response
         }

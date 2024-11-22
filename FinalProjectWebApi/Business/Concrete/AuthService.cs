@@ -84,6 +84,20 @@ namespace FinalProjectWebApi.Business.Concrete
         {
              return await _authRepository.GetAllAsync();
         }
+
+        public async Task UpdateUserRoleAsync(int userId, string newRole)
+        {
+            var user = await _authRepository.GetByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new Exception("Kullanıcı bulunamadı");
+            }
+
+            user.Role = newRole; // Kullanıcı rolünü güncelle
+            await _authRepository.UpdateAsync(user); // Veritabanında güncelleme
+        }
+
     }
 
 }
