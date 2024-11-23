@@ -1,4 +1,5 @@
 ﻿using FinalProjectWebApi.DataAccess.Abstract;
+using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,15 +42,45 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         {
             return await _context.Articles.FindAsync(id);
         }
-        public async Task<IQueryable<Article>> GetArticlesByUserIdAsync(int userId)
+        public async Task<PagingResult<Article>> GetPagedArticlesByUserIdAsync(int userId,int pageNumber,int pageSize)
         {
-            return _context.Articles
-                .Where(a => a.PublishedBy == userId).AsQueryable();  // Veritabanında filtreleme
+            var query = _context.Articles
+               .Where(a => a.PublishedBy == userId);
+            int totalCount = await query.CountAsync();
+            var articles = await query
+                .Skip((pageNumber - 1) * pageSize) // Sayfalama için atlama
+                .Take(pageSize) // Sayfa boyutunda veri çekme
+                .ToListAsync(); // Listeleme
+            return new PagingResult<Article>
+            {
+                Items = articles,
+                TotalItems = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
         public async Task UpdateAsync( Article article)
         {
             
+        }
+
+        public async Task<PagingResult<Article>> GetArticlesPagedAsync(int pageNumber, int pageSize)
+        {
+            var totalItems = await _context.Articles.CountAsync();
+
+            var articles = await _context.Articles
+                .Skip((pageNumber - 1) * pageSize)  // Atlanacak öğe sayısı
+                .Take(pageSize)                    // Alınacak öğe sayısı
+                .ToListAsync();
+
+            return new PagingResult<Article>
+            {
+                Items = articles,
+                TotalItems = totalItems,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
     }
 }

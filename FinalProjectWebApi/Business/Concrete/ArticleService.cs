@@ -59,20 +59,41 @@ namespace FinalProjectWebApi.Business.Concrete
             var articles = await _articleRepository.GetAllAsync();
             return await articles.Select(article => _mapper.MapToDto(article)).ToListAsync();
         }
-        public async Task<List<ArticleDto>> GetArticlesByUserIdAsync(int userId)
+        public async Task<PagingResult<ArticleDto>> GetArticlesByUserIdAsync(int userId,int pageNumber,int pageSize)
         {
             // Kullanıcıya ait makaleleri repository katmanından alıyoruz
-            var articles = await _articleRepository.GetArticlesByUserIdAsync(userId);
+            var result = await _articleRepository.GetPagedArticlesByUserIdAsync(userId, pageNumber, pageSize);
 
             // İş mantığı ve dönüşüm işlemleri yapılabilir
-            var articleDtos = articles.Select(article => _mapper.MapToDto(article)).ToList();
+            var articleDtos = result.Items.Select(article => _mapper.MapToDto(article)).ToList();
 
-            return articleDtos;
+            return new PagingResult<ArticleDto>
+            {
+                Items = articleDtos,
+                TotalItems = result.TotalItems,
+                PageNumber = result.PageNumber,
+                PageSize = result.PageSize
+            };
         }
 
         public Task<Article> UpdateArticleAsync(Article article)
         {
             throw new NotImplementedException();
+        }
+        public async Task<PagingResult<ArticleDto>> GetArticlesPagedAsync(int pageNumber, int pageSize)
+        {
+            var result = await _articleRepository.GetArticlesPagedAsync(pageNumber, pageSize);
+
+            // Article'den ArticleDto'ya dönüşüm işlemi
+            var articleDtos = result.Items.Select(article => _mapper.MapToDto(article)).ToList();
+
+            return new PagingResult<ArticleDto>
+            {
+                Items = articleDtos,
+                TotalItems = result.TotalItems,
+                PageNumber = result.PageNumber,
+                PageSize = result.PageSize
+            };
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.Business.Concrete;
+using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -26,9 +27,12 @@ namespace FinalProjectWebApi.Controllers
         }
         // GET: api/<ArticleController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Article>>> GetArticlesAsync()
+        public async Task<ActionResult<PagingResult<ArticleDto>>> GetArticlesPagedAsync(int pageNumber = 1, int pageSize = 10)
         {
-            var result = await _articleService.GetArticlesAsync();
+            // Sayfalama işlemi için gerekli parametreleri alıyoruz
+            var result = await _articleService.GetArticlesPagedAsync(pageNumber, pageSize);
+
+            // PagedResult döndürüyoruz
             return Ok(result);
         }
 
@@ -46,7 +50,7 @@ namespace FinalProjectWebApi.Controllers
         }
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles ="Admin,Researcher")]
         [HttpGet("UserArticles")]
-        public async Task<IActionResult> GetUserArticles()
+        public async Task<ActionResult<PagingResult<ArticleDto>>> GetUserArticles(int pageNumber = 1, int pageSize = 10)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
@@ -55,12 +59,12 @@ namespace FinalProjectWebApi.Controllers
             {
                 return Unauthorized();
             }
-            if(role == "Admin" ||  role == "Researcher")
+            if(role != "Admin" &&  role != "Researcher")
             {
                 return Forbid();
             }
 
-            var articles = await _articleService.GetArticlesByUserIdAsync(int.Parse(userId));
+            var articles = await _articleService.GetArticlesByUserIdAsync(int.Parse(userId),pageNumber,pageSize);
             return Ok(articles);
         }
 
@@ -76,7 +80,7 @@ namespace FinalProjectWebApi.Controllers
             {
                 return Unauthorized("Geçersiz kullanıcı");
             }
-            if (role == "Admin" || role == "Researcher")
+            if (role == "Admin" && role == "Researcher")
             {
                 return Forbid();
             }
@@ -111,5 +115,7 @@ namespace FinalProjectWebApi.Controllers
             // Silme işlemi başarılı ise 200 OK ve silinen makale bilgisi döndürüyoruz
             return Ok(new { Message = "Article deleted successfully.", Article = deletedArticle });
         }
+
+        
     }
 }

@@ -7,6 +7,7 @@
         public string Title { get; set; }
         public string Description { get; set; }
         public string Content { get; set; }
+        public int PublishedBy { get; set; }
         public DateTime PublishedAt { get; set; }
         public int TotalViews { get; set; }
 

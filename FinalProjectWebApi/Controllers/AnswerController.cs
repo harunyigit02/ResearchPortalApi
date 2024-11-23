@@ -1,7 +1,10 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace FinalProjectWebApi.Controllers
 {
@@ -46,10 +49,17 @@ namespace FinalProjectWebApi.Controllers
             var createdAnswer = await _answerService.AddAnswerAsync(answer);
             return CreatedAtAction(nameof(GetAnswerById), new { id = createdAnswer.Id }, createdAnswer); // 201 Created HTTP response
         }
-
+        [Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("submitAnswers")]
         public async Task<IActionResult> SubmitAnswers([FromBody] List<Answer> answers)
         {
+            var userId=User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Forbid();
+            }
+
             if (answers == null || answers.Count == 0)
             {
                 return BadRequest("Geçersiz veri.");
