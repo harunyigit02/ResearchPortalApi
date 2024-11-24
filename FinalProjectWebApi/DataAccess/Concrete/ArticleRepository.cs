@@ -2,6 +2,7 @@
 using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace FinalProjectWebApi.DataAccess.Concrete
 {
@@ -42,10 +43,15 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         {
             return await _context.Articles.FindAsync(id);
         }
-        public async Task<PagingResult<Article>> GetPagedArticlesByUserIdAsync(int userId,int pageNumber,int pageSize)
+        public async Task<PagingResult<Article>> GetPagedArticlesByUserIdAsync(int userId,int pageNumber,int pageSize,int? categoryId)
         {
             var query = _context.Articles
                .Where(a => a.PublishedBy == userId);
+            if (categoryId.HasValue)
+            {
+                query=query.Where(a=>a.CategoryId == categoryId.Value);
+            }
+
             int totalCount = await query.CountAsync();
             var articles = await query
                 .Skip((pageNumber - 1) * pageSize) // Sayfalama için atlama
@@ -65,11 +71,18 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             
         }
 
-        public async Task<PagingResult<Article>> GetArticlesPagedAsync(int pageNumber, int pageSize)
+        public async Task<PagingResult<Article>> GetArticlesPagedAsync(int pageNumber, int pageSize,int? categoryId)
         {
-            var totalItems = await _context.Articles.CountAsync();
+            var query = _context.Articles.AsQueryable();
 
-            var articles = await _context.Articles
+            if (categoryId.HasValue)
+            {
+                query=query.Where(r => r.CategoryId == categoryId.Value);
+            }
+
+            var totalItems = await query.CountAsync();
+
+            var articles = await query
                 .Skip((pageNumber - 1) * pageSize)  // Atlanacak öğe sayısı
                 .Take(pageSize)                    // Alınacak öğe sayısı
                 .ToListAsync();

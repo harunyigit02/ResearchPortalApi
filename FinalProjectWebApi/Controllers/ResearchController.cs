@@ -1,5 +1,6 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.Business.Concrete;
+using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -24,15 +25,23 @@ namespace FinalProjectWebApi.Controllers
         }
         // GET: api/<ResearchController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Research>>> GetResearches()
+        public async Task<ActionResult<PagingResult<Research>>> GetResearches(int pageNumber=1,int pageSize=3)
         {
-            var result = await _researchService.GetResearchesAsync();
+            var result = await _researchService.GetPagedResearchesAsync(pageNumber,pageSize);
             return Ok(result);
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles ="Admin,Researcher")]
         [HttpGet("UserResearches")]
-        public async Task<IActionResult> GetUserResearches()
+        public async Task<IActionResult> GetUserResearches(
+            [FromQuery] string? title,
+            [FromQuery] int? categoryId,
+            [FromQuery] bool? isFaceToFace,
+            [FromQuery] int? publishedBy,
+            [FromQuery] DateTime? publishedAt,
+            int pageNumber = 1,
+            int pageSize = 10
+           )
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
@@ -46,14 +55,25 @@ namespace FinalProjectWebApi.Controllers
                 return Forbid();
             }
 
-            var researches = await _researchService.GetResearchesByUserIdAsync(int.Parse(userId));
+            var researches = await _researchService.GetPagedResearhesByUserIdAsync(int.Parse(userId),pageNumber,pageSize,title,categoryId,isFaceToFace,publishedBy,publishedAt);
             return Ok(researches);
         }
 
         [HttpGet("/api/Research/Published")]
-        public async Task<ActionResult<IEnumerable<Research>>> GetCompletedResearches()
+        public async Task<ActionResult<PagingResult<Research>>> GetCompletedResearches(
+                       
+            [FromQuery] string? title,
+            [FromQuery] int? categoryId,
+            [FromQuery] bool? isFaceToFace,
+            [FromQuery] int? publishedBy,
+            [FromQuery] DateTime? publishedAt,
+            int pageNumber = 1,
+            int pageSize = 10
+             
+
+            )
         {
-            var result = await _researchService.GetCompletedResearchesAsync();
+            var result = await _researchService.GetCompletedResearchesAsync(pageNumber,pageSize,title,categoryId,isFaceToFace,publishedBy,publishedAt);
             return Ok(result);
         }
 
