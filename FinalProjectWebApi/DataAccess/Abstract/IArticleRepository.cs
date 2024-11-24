@@ -7,9 +7,8 @@ namespace FinalProjectWebApi.DataAccess.Abstract
     {
         Task<Article> GetByIdAsync(int id);
         Task<IQueryable<Article>> GetAllAsync();
-        Task<PagingResult<Article>> GetArticlesPagedAsync(int pageNumber, int pageSize);
-        Task<PagingResult<Article>> GetPagedArticlesByUserIdAsync(int userId, int pageNumber, int pageSize);
-        
+        Task<PagingResult<Article>> GetArticlesPagedAsync(int pageNumber, int pageSize, int? categoryId);
+        Task<PagingResult<Article>> GetPagedArticlesByUserIdAsync(int userId, int pageNumber, int pageSize, int? categoryId);
         Task<Article> AddAsync(Article article);
         Task UpdateAsync( Article article);
         Task DeleteAsync(int id);

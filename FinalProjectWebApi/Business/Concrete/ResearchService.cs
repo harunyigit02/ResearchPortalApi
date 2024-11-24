@@ -51,9 +51,25 @@ namespace FinalProjectWebApi.Business.Concrete
         {
             return await _researchRepository.GetAllAsync();
         }
-        public async Task<List<Research>> GetCompletedResearchesAsync()
+        public async Task<PagingResult<Research>> GetCompletedResearchesAsync(
+              int pageNumber,
+              int pageSize,
+              string? title,
+              int? categoryId,
+              bool? isFaceToFace,
+              int? publishedBy,
+              DateTime? publishedAt
+            )
+              
         {
-            return await _researchRepository.GetCompletedAsync();
+            return await _researchRepository.GetCompletedAsync(
+                pageNumber,
+                pageSize,
+                title,
+                categoryId,
+                isFaceToFace,
+                publishedAt,
+                publishedBy);
         }
 
         public async Task<Research> UpdateResearchAsync(int id,Research research)
@@ -75,6 +91,38 @@ namespace FinalProjectWebApi.Business.Concrete
             // Repository üzerinden güncelleme işlemini yap
             await _researchRepository.UpdateAsync(existingResearch);
             return existingResearch;
+
+        }
+
+        public async Task<PagingResult<Research>> GetPagedResearchesAsync(int pageNumber,int pageSize)
+        {
+            var result = await _researchRepository.GetResearchesPagedAsync(pageNumber, pageSize);
+            var researches = result.Items;
+
+            return new PagingResult<Research>
+            {
+                Items = researches,
+                TotalItems = result.TotalItems,
+                PageNumber = result.PageNumber,
+                PageSize = result.PageSize
+
+            };
+        }
+        public async Task<PagingResult<Research>> GetPagedResearhesByUserIdAsync(
+            int userId,
+            int pageNumber,
+            int pageSize,
+            string? title,
+            int? categoryId,
+            bool? isFaceToFace,
+            int? publishedBy,
+            DateTime? publishedAt
+            )
+        {
+            var result = await _researchRepository.GetPagedResearchesByUserIdAsync(userId,pageNumber, pageSize,title,categoryId,isFaceToFace,publishedAt,publishedBy);
+            
+
+            return result;
 
         }
     }
