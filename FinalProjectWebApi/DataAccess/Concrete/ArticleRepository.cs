@@ -3,6 +3,7 @@ using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace FinalProjectWebApi.DataAccess.Concrete
 {
@@ -43,13 +44,18 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         {
             return await _context.Articles.FindAsync(id);
         }
-        public async Task<PagingResult<Article>> GetPagedArticlesByUserIdAsync(int userId,int pageNumber,int pageSize,int? categoryId)
+        public async Task<PagingResult<Article>> GetPagedArticlesByUserIdAsync(int userId,int pageNumber,int pageSize,int? categoryId,string? keyword)
         {
             var query = _context.Articles
                .Where(a => a.PublishedBy == userId);
             if (categoryId.HasValue)
             {
                 query=query.Where(a=>a.CategoryId == categoryId.Value);
+            }
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                var loweredKeyword = keyword.ToLower();
+                query = query.Where(r => r.Title.ToLower().Contains(loweredKeyword) || r.Description.Contains(loweredKeyword));
             }
 
             int totalCount = await query.CountAsync();
@@ -71,13 +77,18 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             
         }
 
-        public async Task<PagingResult<Article>> GetArticlesPagedAsync(int pageNumber, int pageSize,int? categoryId)
+        public async Task<PagingResult<Article>> GetArticlesPagedAsync(int pageNumber, int pageSize,int? categoryId,string? keyword)
         {
             var query = _context.Articles.AsQueryable();
 
             if (categoryId.HasValue)
             {
                 query=query.Where(r => r.CategoryId == categoryId.Value);
+            }
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                var loweredKeyword = keyword.ToLower();
+                query = query.Where(r=>r.Title.ToLower().Contains(loweredKeyword) || r.Description.Contains(loweredKeyword));
             }
 
             var totalItems = await query.CountAsync();

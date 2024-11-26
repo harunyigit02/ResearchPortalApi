@@ -34,11 +34,9 @@ namespace FinalProjectWebApi.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles ="Admin,Researcher")]
         [HttpGet("UserResearches")]
         public async Task<IActionResult> GetUserResearches(
-            [FromQuery] string? title,
+            [FromQuery] string? keyword,
             [FromQuery] int? categoryId,
-            [FromQuery] bool? isFaceToFace,
-            [FromQuery] int? publishedBy,
-            [FromQuery] DateTime? publishedAt,
+            
             int pageNumber = 1,
             int pageSize = 10
            )
@@ -55,25 +53,24 @@ namespace FinalProjectWebApi.Controllers
                 return Forbid();
             }
 
-            var researches = await _researchService.GetPagedResearhesByUserIdAsync(int.Parse(userId),pageNumber,pageSize,title,categoryId,isFaceToFace,publishedBy,publishedAt);
+            var researches = await _researchService.GetPagedResearhesByUserIdAsync(int.Parse(userId),pageNumber,pageSize,keyword,categoryId);
             return Ok(researches);
         }
 
         [HttpGet("/api/Research/Published")]
         public async Task<ActionResult<PagingResult<Research>>> GetCompletedResearches(
                        
-            [FromQuery] string? title,
+            
             [FromQuery] int? categoryId,
-            [FromQuery] bool? isFaceToFace,
-            [FromQuery] int? publishedBy,
-            [FromQuery] DateTime? publishedAt,
+            [FromQuery] string? keyword,
+
             int pageNumber = 1,
             int pageSize = 10
              
 
             )
         {
-            var result = await _researchService.GetCompletedResearchesAsync(pageNumber,pageSize,title,categoryId,isFaceToFace,publishedBy,publishedAt);
+            var result = await _researchService.GetCompletedResearchesAsync(pageNumber,pageSize,categoryId,keyword);
             return Ok(result);
         }
 

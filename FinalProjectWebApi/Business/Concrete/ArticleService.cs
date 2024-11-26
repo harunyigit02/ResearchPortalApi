@@ -59,10 +59,10 @@ namespace FinalProjectWebApi.Business.Concrete
             var articles = await _articleRepository.GetAllAsync();
             return await articles.Select(article => _mapper.MapToDto(article)).ToListAsync();
         }
-        public async Task<PagingResult<ArticleDto>> GetArticlesByUserIdAsync(int userId,int pageNumber,int pageSize,int? categoryId)
+        public async Task<PagingResult<ArticleDto>> GetArticlesByUserIdAsync(int userId,int pageNumber,int pageSize,int? categoryId,string? keyword)
         {
             // Kullanıcıya ait makaleleri repository katmanından alıyoruz
-            var result = await _articleRepository.GetPagedArticlesByUserIdAsync(userId, pageNumber, pageSize,categoryId);
+            var result = await _articleRepository.GetPagedArticlesByUserIdAsync(userId, pageNumber, pageSize,categoryId,keyword);
 
             // İş mantığı ve dönüşüm işlemleri yapılabilir
             var articleDtos = result.Items.Select(article => _mapper.MapToDto(article)).ToList();
@@ -80,9 +80,9 @@ namespace FinalProjectWebApi.Business.Concrete
         {
             throw new NotImplementedException();
         }
-        public async Task<PagingResult<ArticleDto>> GetArticlesPagedAsync(int pageNumber, int pageSize,int? categoryId)
+        public async Task<PagingResult<ArticleDto>> GetArticlesPagedAsync(int pageNumber, int pageSize,int? categoryId,string? keyword)
         {
-            var result = await _articleRepository.GetArticlesPagedAsync(pageNumber, pageSize,categoryId);
+            var result = await _articleRepository.GetArticlesPagedAsync(pageNumber, pageSize,categoryId,keyword);
 
             // Article'den ArticleDto'ya dönüşüm işlemi
             var articleDtos = result.Items.Select(article => _mapper.MapToDto(article)).ToList();

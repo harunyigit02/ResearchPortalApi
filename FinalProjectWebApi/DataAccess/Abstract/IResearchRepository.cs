@@ -14,12 +14,14 @@ namespace FinalProjectWebApi.DataAccess.Abstract
                int userId,
                int pageNumber,
                int pageSize,
-               string? title,
+               string? keyword,
+               int? categoryId
+             );
+        Task<PagingResult<Research>> GetCompletedAsync(
+               int pageNumber,
+               int pageSize,
                int? categoryId,
-               bool? isFaceToFace,
-               DateTime? publishedAt,
-               int? publishedBy);
-        Task<PagingResult<Research>> GetCompletedAsync(int pageNumber,int pageSize,string? title,int? categoryId,bool? isFaceToFace,DateTime? publishedAt,int? publishedBy);
+               string? keyword);
 
         Task<Research> AddAsync(Research research);
         Task UpdateAsync( Research research);

@@ -54,22 +54,16 @@ namespace FinalProjectWebApi.Business.Concrete
         public async Task<PagingResult<Research>> GetCompletedResearchesAsync(
               int pageNumber,
               int pageSize,
-              string? title,
               int? categoryId,
-              bool? isFaceToFace,
-              int? publishedBy,
-              DateTime? publishedAt
+              string? keyword
             )
               
         {
             return await _researchRepository.GetCompletedAsync(
                 pageNumber,
                 pageSize,
-                title,
                 categoryId,
-                isFaceToFace,
-                publishedAt,
-                publishedBy);
+                keyword);
         }
 
         public async Task<Research> UpdateResearchAsync(int id,Research research)
@@ -112,14 +106,12 @@ namespace FinalProjectWebApi.Business.Concrete
             int userId,
             int pageNumber,
             int pageSize,
-            string? title,
-            int? categoryId,
-            bool? isFaceToFace,
-            int? publishedBy,
-            DateTime? publishedAt
+            string? keyword,
+            int? categoryId
+            
             )
         {
-            var result = await _researchRepository.GetPagedResearchesByUserIdAsync(userId,pageNumber, pageSize,title,categoryId,isFaceToFace,publishedAt,publishedBy);
+            var result = await _researchRepository.GetPagedResearchesByUserIdAsync(userId,pageNumber, pageSize,keyword,categoryId);
             
 
             return result;

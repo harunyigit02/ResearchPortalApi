@@ -43,11 +43,8 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         public async Task<PagingResult<Research>> GetCompletedAsync(
                int pageNumber,
                int pageSize,
-               string? title,
                int? categoryId,
-               bool? isFaceToFace,
-               DateTime? publishedAt,
-               int? publishedBy)
+               string? keyword)
         {
             var queryable = _context.Researches
                 .Include(r => r.Questions)
@@ -55,9 +52,10 @@ namespace FinalProjectWebApi.DataAccess.Concrete
                 .Where(r => r.IsCompleted); // Önceden tamamlanmış araştırmaları filtreledik
 
             // Filtreleme ekliyoruz
-            if (!string.IsNullOrEmpty(title))
+            if (!string.IsNullOrEmpty(keyword))
             {
-                queryable = queryable.Where(r => r.Title.Contains(title));
+                var lowerKeyword=keyword.ToLower();
+                queryable = queryable.Where(r => r.Title.ToLower().Contains(lowerKeyword) || r.Description.ToLower().Contains(lowerKeyword));
             }
 
             if (categoryId.HasValue)
@@ -65,20 +63,8 @@ namespace FinalProjectWebApi.DataAccess.Concrete
                 queryable = queryable.Where(r => r.CategoryId == categoryId.Value);
             }
 
-            if (isFaceToFace.HasValue)
-            {
-                queryable = queryable.Where(r => r.IsFaceToFace == isFaceToFace.Value);
-            }
-
-            if (publishedAt.HasValue)
-            {
-                queryable = queryable.Where(r => r.PublishedAt >= publishedAt.Value);
-            }
-
-            if (publishedBy.HasValue)
-            {
-                queryable = queryable.Where(r => r.PublishedBy <= publishedBy.Value);
-            }
+            
+            
 
             // Sayfalama işlemi
             var totalItems = await queryable.CountAsync();
@@ -137,18 +123,17 @@ namespace FinalProjectWebApi.DataAccess.Concrete
                int userId,
                int pageNumber,
                int pageSize,
-               string? title,
-               int? categoryId,
-               bool? isFaceToFace,
-               DateTime? publishedAt,
-               int? publishedBy)
+               string? keyword,
+               int? categoryId
+             )
         {
             var query = _context.Researches
                .Where(a => a.PublishedBy == userId);
 
-            if (!string.IsNullOrEmpty(title))
+            if (!string.IsNullOrEmpty(keyword))
             {
-                query = query.Where(r => r.Title.Contains(title));
+                var lowerKeyword = keyword.ToLower();
+                query = query.Where(r => r.Title.ToLower().Contains(lowerKeyword) || r.Description.ToLower().Contains(lowerKeyword));
             }
 
             if (categoryId.HasValue)
@@ -156,20 +141,7 @@ namespace FinalProjectWebApi.DataAccess.Concrete
                 query = query.Where(r => r.CategoryId == categoryId.Value);
             }
 
-            if (isFaceToFace.HasValue)
-            {
-                query = query.Where(r => r.IsFaceToFace == isFaceToFace.Value);
-            }
-
-            if (publishedAt.HasValue)
-            {
-                query = query.Where(r => r.PublishedAt.Date == publishedAt.Value.Date);
-            }
-
-            if (publishedBy.HasValue)
-            {
-                query = query.Where(r => r.PublishedBy <= publishedBy.Value);
-            }
+            
 
             int totalCount = await query.CountAsync();
             var researches = await query
