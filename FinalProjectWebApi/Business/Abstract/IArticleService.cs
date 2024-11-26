@@ -7,8 +7,8 @@ namespace FinalProjectWebApi.Business.Abstract
     {
 
         Task<List<ArticleDto>> GetArticlesAsync();
-        Task<PagingResult<ArticleDto>> GetArticlesPagedAsync(int pageNumber, int pageSize, int? categoryId);
-        Task<PagingResult<ArticleDto>> GetArticlesByUserIdAsync(int userId, int pageNumber, int pageSize, int? categoryId);
+        Task<PagingResult<ArticleDto>> GetArticlesPagedAsync(int pageNumber, int pageSize, int? categoryId, string? keyword);
+        Task<PagingResult<ArticleDto>> GetArticlesByUserIdAsync(int userId, int pageNumber, int pageSize, int? categoryId,string? keyword);
         Task<Article> GetArticleByIdAsync(int id);
         Task<Article> AddArticleAsync(Article article);
         Task<Article>UpdateArticleAsync(Article article);
