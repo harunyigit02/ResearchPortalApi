@@ -26,9 +26,9 @@ namespace FinalProjectWebApi.Business.Concrete
             await _categoryRepository.DeleteAsync(id);
         }
 
-        public Task<List<Category>> GetCategoriesAsync()
+        public async Task<List<Category>> GetCategoriesAsync()
         {
-            return _categoryRepository.GetAllAsync();
+            return await _categoryRepository.GetAllAsync();
             
         }
 

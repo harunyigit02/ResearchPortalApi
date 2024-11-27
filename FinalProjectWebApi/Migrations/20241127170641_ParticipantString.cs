@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FinalProjectWebApi.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class ParticipantString : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -69,6 +69,36 @@ namespace FinalProjectWebApi.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ParticipantInfos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    Age = table.Column<int>(type: "integer", nullable: false),
+                    Gender = table.Column<string>(type: "text", nullable: false),
+                    Location = table.Column<string>(type: "text", nullable: false),
+                    EducationLevel = table.Column<string>(type: "text", nullable: false),
+                    Occupation = table.Column<string>(type: "text", nullable: false),
+                    Ethnicity = table.Column<string>(type: "text", nullable: false),
+                    MartialStatus = table.Column<string>(type: "text", nullable: false),
+                    ParentalStatus = table.Column<string>(type: "text", nullable: false),
+                    ChildStatus = table.Column<string>(type: "text", nullable: false),
+                    DisabilityStatus = table.Column<string>(type: "text", nullable: false),
+                    HousingType = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParticipantInfos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ParticipantInfos_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -228,6 +258,12 @@ namespace FinalProjectWebApi.Migrations
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ParticipantInfos_UserId",
+                table: "ParticipantInfos",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Questions_ResearchId",
                 table: "Questions",
                 column: "ResearchId");
@@ -257,6 +293,9 @@ namespace FinalProjectWebApi.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Answers");
+
+            migrationBuilder.DropTable(
+                name: "ParticipantInfos");
 
             migrationBuilder.DropTable(
                 name: "ResearchRequirements");
