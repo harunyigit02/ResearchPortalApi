@@ -20,6 +20,7 @@ namespace FinalProjectWebApi.DataAccess
         public DbSet<Option> Options { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<ParticipantInfo> ParticipantInfos { get; set; }
 
 
 
@@ -35,6 +36,8 @@ namespace FinalProjectWebApi.DataAccess
             modelBuilder.ApplyConfiguration(new OptionConfiguration());
             modelBuilder.ApplyConfiguration(new AnswerConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new ParticipantInfoConfiguration());
+            
 
 
         }

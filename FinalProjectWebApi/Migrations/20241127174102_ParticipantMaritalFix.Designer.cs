@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinalProjectWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241121165624_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241127174102_ParticipantMaritalFix")]
+    partial class ParticipantMaritalFix
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -125,6 +125,68 @@ namespace FinalProjectWebApi.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("Options", (string)null);
+                });
+
+            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.ParticipantInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Age")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ChildStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("DisabilityStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("EducationLevel")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Ethnicity")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("HousingType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("MaritalStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Occupation")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ParentalStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("ParticipantInfos", (string)null);
                 });
 
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Question", b =>
@@ -320,6 +382,17 @@ namespace FinalProjectWebApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.ParticipantInfo", b =>
+                {
+                    b.HasOne("FinalProjectWebApi.Entities.Concrete.User", "User")
+                        .WithOne()
+                        .HasForeignKey("FinalProjectWebApi.Entities.Concrete.ParticipantInfo", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Question", b =>
