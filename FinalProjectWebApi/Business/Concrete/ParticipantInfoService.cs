@@ -32,7 +32,7 @@ namespace FinalProjectWebApi.Business.Concrete
             return await _participantInfoRepository.GetAllAsync();
         }
 
-        public async Task<ParticipantInfo> GetParticipantInfoByUserIdAsync(int userId)
+        public async Task<ParticipantInfo> GetParticipantInfosByUserIdAsync(int userId)
         {
             return await _participantInfoRepository.GetByUserIdAsync(userId);
         }

@@ -35,6 +35,8 @@ builder.Services.AddScoped<IViewsRepository, ViewsRepository>();
 builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IParticipantInfoRepository, ParticipantInfoRepository>();
+builder.Services.AddScoped<ITemporaryUserRepository, TemporaryUserRepository>();
+
 
 
 

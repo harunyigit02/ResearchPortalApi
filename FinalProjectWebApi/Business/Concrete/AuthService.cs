@@ -12,34 +12,81 @@ namespace FinalProjectWebApi.Business.Concrete
     public class AuthService : IAuthService
     {
         private readonly IAuthRepository _authRepository;
+        private readonly ITemporaryUserRepository _temporaryUserRepository;
         private readonly IConfiguration _configuration;
 
-        public AuthService(IAuthRepository userRepository, IConfiguration configuration)
+        public AuthService(IAuthRepository userRepository, IConfiguration configuration, ITemporaryUserRepository temporaryUserRepository)
         {
             _authRepository = userRepository;
             _configuration = configuration;
+            _temporaryUserRepository = temporaryUserRepository;
         }
 
         public async Task Register(string email, string password)
         {
             // Kullanıcı zaten var mı kontrol et
-            if (await _authRepository.GetUserByUserName(email) != null)
+            if (await _temporaryUserRepository.GetUserByUserName(email) != null)
             {
                 throw new Exception("Kullanıcı zaten kayıtlı.");
             }
 
             // Şifre Hash ve Salt oluştur
             using var hmac = new HMACSHA512();
-            var user = new User
+            var verificationCode = GenerateVerificationCode();
+            var tempUser = new TemporaryUser
             {
                 Email = email,
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password)),
                 PasswordSalt = hmac.Key,
-                Role = "User"
+                Role = "User",
+                VerificationCode = verificationCode,
+                CreatedAt = DateTime.UtcNow
             };
 
             // Kullanıcıyı kaydet
+            await _temporaryUserRepository.AddAsync(tempUser);
+            
+        }
+        private string GenerateVerificationCode()
+        {
+            var random = new Random();
+            return random.Next(100000, 999999).ToString(); // 6 haneli rastgele sayı
+        }
+
+        public async Task VerifyEmail(string email, string verificationCode)
+        {
+            // TemporaryUser tablosunda email'e göre kullanıcıyı bul
+            var tempUser = await _temporaryUserRepository.GetUserByUserName(email);
+            if (tempUser == null)
+            {
+                throw new Exception("Geçici kullanıcı bulunamadı.");
+            }
+            if ((DateTime.UtcNow - tempUser.CreatedAt).TotalMinutes > 5)
+            {
+                // 5 dakika geçmişse, kaydı sil ve hata döndür
+                await _temporaryUserRepository.DeleteAsync(tempUser.Id);
+                throw new Exception("Doğrulama süresi dolmuş. Kayıt silindi.");
+            }
+
+            // VerificationCode kontrolü
+            if (tempUser.VerificationCode != verificationCode)
+            {
+                throw new Exception("Doğrulama kodu hatalı.");
+            }
+
+            // Kullanıcıyı User tablosuna taşı
+            var user = new User
+            {
+                Email = tempUser.Email,
+                PasswordHash = tempUser.PasswordHash,
+                PasswordSalt = tempUser.PasswordSalt,
+                Role = tempUser.Role
+            };
+
             await _authRepository.AddUser(user);
+
+            // TemporaryUser kaydını sil
+            await _temporaryUserRepository.DeleteAsync(tempUser.Id);
         }
 
         public async Task<string> Login(string username, string password)
