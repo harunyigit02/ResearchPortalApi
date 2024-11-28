@@ -38,7 +38,7 @@ namespace FinalProjectWebApi.Controllers
             try
             {
                 await _authService.VerifyEmail(verifyEmailDto.Email, verifyEmailDto.VerificationCode);
-                return Ok("Email doğrulandı ve kullanıcı kaydedildi.");
+                return Ok(new { message = "Email doğrulandı ve kullanıcı kaydedildi.", email = verifyEmailDto.Email });
             }
             catch (Exception ex)
             {

@@ -4,6 +4,7 @@ using FinalProjectWebApi.Business.Mappings;
 using FinalProjectWebApi.DataAccess;
 using FinalProjectWebApi.DataAccess.Abstract;
 using FinalProjectWebApi.DataAccess.Concrete;
+using FinalProjectWebApi.Entities.Abstract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -23,6 +24,7 @@ builder.Services.AddScoped<IOptionService, OptionService>();
 builder.Services.AddScoped<IAnswerService, AnswerService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IParticipantInfoService,ParticipantInfoService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 
@@ -44,9 +46,10 @@ builder.Services.AddScoped<ITemporaryUserRepository, TemporaryUserRepository>();
 
 
 
-
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddTransient<IEmailService, EmailService>();
 // Add services to the container.
-
+builder.Services.AddHostedService<TemporaryUserCleanupService>();
 builder.Services.AddControllers();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

@@ -14,18 +14,20 @@ namespace FinalProjectWebApi.Business.Concrete
         private readonly IAuthRepository _authRepository;
         private readonly ITemporaryUserRepository _temporaryUserRepository;
         private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
 
-        public AuthService(IAuthRepository userRepository, IConfiguration configuration, ITemporaryUserRepository temporaryUserRepository)
+        public AuthService(IAuthRepository userRepository, IConfiguration configuration, ITemporaryUserRepository temporaryUserRepository, IEmailService emailService)
         {
             _authRepository = userRepository;
             _configuration = configuration;
             _temporaryUserRepository = temporaryUserRepository;
+            _emailService = emailService;
         }
 
         public async Task Register(string email, string password)
         {
             // Kullanıcı zaten var mı kontrol et
-            if (await _temporaryUserRepository.GetUserByUserName(email) != null)
+            if (await _temporaryUserRepository.GetUserByUserName(email) != null && await _authRepository.GetUserByUserName(email)!=null)
             {
                 throw new Exception("Kullanıcı zaten kayıtlı.");
             }
@@ -43,9 +45,19 @@ namespace FinalProjectWebApi.Business.Concrete
                 CreatedAt = DateTime.UtcNow
             };
 
-            // Kullanıcıyı kaydet
+            // Kullanıcıyı geçici kaydet.
             await _temporaryUserRepository.AddAsync(tempUser);
-            
+
+            string emailBody = $@"
+            Merhaba,<br/><br/>
+            Hesabınızı doğrulamak için aşağıdaki doğrulama kodunu kullanabilirsiniz:<br/><br/>
+            <b>{verificationCode}</b><br/><br/>
+            Bu kod 5 dakika boyunca geçerlidir.
+           ";
+
+            await _emailService.SendEmailAsync(email, "Hesap Doğrulama Kodu", emailBody);
+
+
         }
         private string GenerateVerificationCode()
         {

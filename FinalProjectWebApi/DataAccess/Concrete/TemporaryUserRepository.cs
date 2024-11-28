@@ -22,6 +22,13 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             return await _context.TemporaryUsers.FirstOrDefaultAsync(u => u.Email == email);
         }
 
+        public async Task<List<TemporaryUser>> GetExpiredUsersAsync(DateTime expirationThreshold)
+        {
+            return await _context.TemporaryUsers
+                .Where(user => user.CreatedAt < expirationThreshold)
+                .ToListAsync();
+        }
+
         public async Task AddAsync(TemporaryUser temporaryUser)
         {
             await _context.TemporaryUsers.AddAsync(temporaryUser);
