@@ -6,6 +6,7 @@ namespace FinalProjectWebApi.Business.Abstract
     {
         Task Register(string email, string password);
         Task<string> Login(string email, string password);
+        Task VerifyEmail(string email, string verificationCode);
         Task<List<User>> GetUsersAsync();
         Task UpdateUserRoleAsync(int userId, string newRole);
     }

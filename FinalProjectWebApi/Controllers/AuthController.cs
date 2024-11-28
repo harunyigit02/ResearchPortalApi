@@ -2,6 +2,7 @@
 using FinalProjectWebApi.Entities.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace FinalProjectWebApi.Controllers
@@ -24,6 +25,20 @@ namespace FinalProjectWebApi.Controllers
             {
                  await _authService.Register(registerDto.Email, registerDto.Password);
                 return Ok(registerDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("verify-email")]
+        public async Task<IActionResult> VerifyEmail([FromBody] VerifyEmailDto verifyEmailDto)
+        {
+            try
+            {
+                await _authService.VerifyEmail(verifyEmailDto.Email, verifyEmailDto.VerificationCode);
+                return Ok("Email doğrulandı ve kullanıcı kaydedildi.");
             }
             catch (Exception ex)
             {

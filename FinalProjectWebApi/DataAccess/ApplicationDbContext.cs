@@ -21,6 +21,7 @@ namespace FinalProjectWebApi.DataAccess
         public DbSet<Answer> Answers { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<ParticipantInfo> ParticipantInfos { get; set; }
+        public DbSet<TemporaryUser> TemporaryUsers { get; set; }
 
 
 
@@ -37,7 +38,8 @@ namespace FinalProjectWebApi.DataAccess
             modelBuilder.ApplyConfiguration(new AnswerConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new ParticipantInfoConfiguration());
-            
+            modelBuilder.ApplyConfiguration(new TemporaryUserConfiguration());
+
 
 
         }
