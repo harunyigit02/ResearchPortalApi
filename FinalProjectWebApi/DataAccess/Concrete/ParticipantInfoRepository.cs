@@ -42,7 +42,7 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         public async Task<ParticipantInfo> GetByUserIdAsync (int userId)
         {
             return await _context.ParticipantInfos
-               .FindAsync(userId);
+               .FirstOrDefaultAsync(p=>p.UserId == userId);
         }
 
         public Task UpdateAsync(ParticipantInfo participantInfo)
