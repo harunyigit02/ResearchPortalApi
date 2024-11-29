@@ -1,6 +1,9 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,10 +15,12 @@ namespace FinalProjectWebApi.Controllers
     {
 
         private readonly IResearchRequirementService _researchRequirementService;
+        private readonly IParticipantInfoService _participantInfoService;
 
-        public ResearchRequirementController(IResearchRequirementService researchRequirementService)
+        public ResearchRequirementController(IResearchRequirementService researchRequirementService, IParticipantInfoService participantInfoService)
         {
             _researchRequirementService = researchRequirementService;
+            _participantInfoService = participantInfoService;
 
         }
         // GET: api/<ResearchRequirementController>
@@ -32,11 +37,21 @@ namespace FinalProjectWebApi.Controllers
         {
             return "value";
         }
+        
 
         // POST api/<ResearchRequirementController>
         [HttpPost]
         public void Post([FromBody] string value)
         {
+        }
+        [Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("MatchedResearchRequirements")]
+        public async Task<IActionResult> GetMatchedResearchRequirements()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var participantInfo= await _participantInfoService.GetParticipantInfosByUserIdAsync(int.Parse(userId));
+            var result = await _researchRequirementService.GetMatchedResearchRequirementsAsync(participantInfo);
+            return Ok(result);
         }
 
         // PUT api/<ResearchRequirementController>/5

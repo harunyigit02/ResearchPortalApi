@@ -6,7 +6,8 @@ namespace FinalProjectWebApi.Business.Abstract
     {
         Task<List<ResearchRequirement>> GetResearchRequirementsAsync();
         Task<ResearchRequirement> GetResearchRequirementByIdAsync(int id);
-        Task<ResearchRequirement> AddResearchRequirementAsync(ResearchRequirement resreq);
+        Task<List<Research>> GetMatchedResearchRequirementsAsync(ParticipantInfo participantInfo);
+        Task<ResearchRequirement> AddResearchRequirementAsync(ResearchRequirement researchRequirement);
         Task<ResearchRequirement> UpdateResearchRequirementAsync(ResearchRequirement resreq);
         Task DeleteResearchRequirementAsync(int id);
     }

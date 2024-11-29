@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -6,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FinalProjectWebApi.Migrations
 {
-    public partial class ParticipantString : Migration
+    public partial class UpdateResearchRequirement : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,6 +23,24 @@ namespace FinalProjectWebApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TemporaryUsers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    PasswordHash = table.Column<byte[]>(type: "bytea", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "bytea", nullable: false),
+                    VerificationCode = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Role = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TemporaryUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -84,7 +103,7 @@ namespace FinalProjectWebApi.Migrations
                     EducationLevel = table.Column<string>(type: "text", nullable: false),
                     Occupation = table.Column<string>(type: "text", nullable: false),
                     Ethnicity = table.Column<string>(type: "text", nullable: false),
-                    MartialStatus = table.Column<string>(type: "text", nullable: false),
+                    MaritalStatus = table.Column<string>(type: "text", nullable: false),
                     ParentalStatus = table.Column<string>(type: "text", nullable: false),
                     ChildStatus = table.Column<string>(type: "text", nullable: false),
                     DisabilityStatus = table.Column<string>(type: "text", nullable: false),
@@ -182,10 +201,18 @@ namespace FinalProjectWebApi.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ResearchId = table.Column<int>(type: "integer", nullable: false),
-                    Age = table.Column<int>(type: "integer", nullable: false),
+                    MinAge = table.Column<int>(type: "integer", nullable: false),
+                    MaxAge = table.Column<int>(type: "integer", nullable: false),
                     Gender = table.Column<string>(type: "text", nullable: false),
+                    Location = table.Column<List<string>>(type: "text[]", nullable: false),
                     EducationLevel = table.Column<string>(type: "text", nullable: false),
-                    Location = table.Column<string>(type: "text", nullable: false)
+                    Occupation = table.Column<string>(type: "text", nullable: false),
+                    Ethnicity = table.Column<string>(type: "text", nullable: false),
+                    MaritalStatus = table.Column<string>(type: "text", nullable: false),
+                    ParentalStatus = table.Column<string>(type: "text", nullable: false),
+                    ChildStatus = table.Column<string>(type: "text", nullable: false),
+                    DisabilityStatus = table.Column<string>(type: "text", nullable: false),
+                    HousingType = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -281,7 +308,8 @@ namespace FinalProjectWebApi.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ResearchRequirements_ResearchId",
                 table: "ResearchRequirements",
-                column: "ResearchId");
+                column: "ResearchId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Views_ViewedArticle",
@@ -299,6 +327,9 @@ namespace FinalProjectWebApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "ResearchRequirements");
+
+            migrationBuilder.DropTable(
+                name: "TemporaryUsers");
 
             migrationBuilder.DropTable(
                 name: "Views");
