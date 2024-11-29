@@ -1,5 +1,6 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.DataAccess;
+using FinalProjectWebApi.DataAccess.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,15 +9,15 @@ namespace FinalProjectWebApi.Business.Concrete
     public class ResearchRequirementService : IResearchRequirementService
     {
 
-        private readonly ApplicationDbContext _context;
+        private readonly IResearchRequirementRepository _researchRequirementRepository;
 
-        public ResearchRequirementService(ApplicationDbContext context)
+        public ResearchRequirementService(IResearchRequirementRepository researchRequirementRepository)
         {
-            _context = context;
+            _researchRequirementRepository = researchRequirementRepository;
         }
-        public Task<ResearchRequirement> AddResearchRequirementAsync(ResearchRequirement resreq)
+        public async Task<ResearchRequirement> AddResearchRequirementAsync(ResearchRequirement researchRequirement)
         {
-            throw new NotImplementedException();
+            return await _researchRequirementRepository.AddAsync(researchRequirement);
         }
 
         public Task DeleteResearchRequirementAsync(int id)
@@ -24,14 +25,18 @@ namespace FinalProjectWebApi.Business.Concrete
             throw new NotImplementedException();
         }
 
-        public Task<ResearchRequirement> GetResearchRequirementByIdAsync(int id)
+        public async Task<ResearchRequirement> GetResearchRequirementByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _researchRequirementRepository.GetByIdAsync(id);
         }
 
-        public Task<List<ResearchRequirement>> GetResearchRequirementsAsync()
+        public async Task<List<ResearchRequirement>> GetResearchRequirementsAsync()
         {
-            return _context.ResearchRequirements.ToListAsync();
+            return await _researchRequirementRepository.GetAllAsync();
+        }
+        public async Task<List<Research>> GetMatchedResearchRequirementsAsync(ParticipantInfo participantInfo)
+        {
+            return await _researchRequirementRepository.GetMatchingResearches(participantInfo);
         }
 
         public Task<ResearchRequirement> UpdateResearchRequirementAsync(ResearchRequirement resreq)
