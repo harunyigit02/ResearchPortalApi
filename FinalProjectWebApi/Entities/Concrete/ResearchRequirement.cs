@@ -12,18 +12,12 @@ namespace FinalProjectWebApi.Entities.Concrete
         public int ResearchId { get; set; }
         public int MinAge { get; set; }
         public int MaxAge { get; set; }
-        public List<string> Gender { get; set; }
-        public List<string> Location { get; set; }
-        public List<string> EducationLevel { get; set; }
-        public List<string> Occupation { get; set; }
-        public List<string> Ethnicity { get; set; }
-        public List<string> MaritalStatus { get; set; }
-        public List<string> ParentalStatus { get; set; }
-        public List<string> ChildStatus { get; set; }
-        public List<string> DisabilityStatus { get; set; }
-        public List<string> HousingType { get; set; }
+        
+       
 
-        [JsonIgnore]
-        public Research? Research { get; set; }
+
+        public virtual Research? Research { get; set; }
+        
+
     }
 }

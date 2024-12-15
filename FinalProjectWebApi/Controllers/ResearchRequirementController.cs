@@ -37,13 +37,17 @@ namespace FinalProjectWebApi.Controllers
         {
             return "value";
         }
-        
+
 
         // POST api/<ResearchRequirementController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ResearchRequirement> AddResearchRequirement([FromBody] ResearchRequirement researchRequirement)
         {
+            return  await _researchRequirementService.AddResearchRequirementAsync(researchRequirement);
         }
+        
+
+
         [Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("MatchedResearchRequirements")]
         public async Task<IActionResult> GetMatchedResearchRequirements()
