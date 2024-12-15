@@ -22,6 +22,18 @@ namespace FinalProjectWebApi.DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<ParticipantInfo> ParticipantInfos { get; set; }
         public DbSet<TemporaryUser> TemporaryUsers { get; set; }
+        public DbSet<ChildStatus> ChildStatuses { get; set; }
+        public DbSet<DisabilityStatus> DisabilityStatuses { get; set; }
+        public DbSet<EducationLevel> EducationLevels { get; set; }
+        public DbSet<Ethnicity> Ethnicities { get; set; }
+        public DbSet<Gender> Genders { get; set; }
+        public DbSet<HousingType> HousingTypes { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<MaritalStatus> MaritalStatuses { get; set; }
+        public DbSet<Occupation> Occupations { get; set; }
+        public DbSet<ParentalStatus> ParentalStatuses { get; set; }
+
+
 
 
 
@@ -39,6 +51,16 @@ namespace FinalProjectWebApi.DataAccess
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new ParticipantInfoConfiguration());
             modelBuilder.ApplyConfiguration(new TemporaryUserConfiguration());
+            modelBuilder.ApplyConfiguration(new ChildStatusConfiguration());
+            modelBuilder.ApplyConfiguration(new DisabilityStatusConfiguration());
+            modelBuilder.ApplyConfiguration(new EducationLevelConfiguration());
+            modelBuilder.ApplyConfiguration(new EthnicityConfiguration());
+            modelBuilder.ApplyConfiguration(new GenderConfiguration());
+            modelBuilder.ApplyConfiguration(new HousingTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new LocationConfiguration());
+            modelBuilder.ApplyConfiguration(new MaritalStatusConfiguration());
+            modelBuilder.ApplyConfiguration(new OccupationConfiguration());
+            modelBuilder.ApplyConfiguration(new ParentalStatusConfiguration());
 
 
 
