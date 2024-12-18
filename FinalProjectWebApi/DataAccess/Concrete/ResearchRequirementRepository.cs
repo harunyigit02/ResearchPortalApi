@@ -45,9 +45,11 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             // Katılımcı bilgileri ile eşleşen araştırmaları filtreliyoruz
             var matchingResearches = await _context.ResearchRequirements
       .Where(r =>
-          (r.MinAge <= participant.Age && r.MaxAge >= participant.Age)
+          (r.MinAge <= participant.Age && r.MaxAge >= participant.Age)&&
+          
           
       )
+      
        // İlişkili Research tablosunu yükle
       .Include(r => r.Research)
       .Select(r => r.Research)
