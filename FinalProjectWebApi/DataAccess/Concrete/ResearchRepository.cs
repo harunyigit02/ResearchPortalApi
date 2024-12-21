@@ -44,7 +44,9 @@ namespace FinalProjectWebApi.DataAccess.Concrete
                int pageNumber,
                int pageSize,
                int? categoryId,
-               string? keyword)
+               string? keyword,
+               DateTime? minDate,
+               DateTime? maxDate)
         {
             var queryable = _context.Researches
                 .Include(r => r.Questions)
@@ -62,9 +64,19 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             {
                 queryable = queryable.Where(r => r.CategoryId == categoryId.Value);
             }
+            if (minDate.HasValue)
+            {
+                minDate = DateTime.SpecifyKind(minDate.Value, DateTimeKind.Utc);
+                queryable = queryable.Where(r => r.PublishedAt > minDate.Value);
+            }
+            if (maxDate.HasValue)
+            {
+                maxDate = DateTime.SpecifyKind(maxDate.Value, DateTimeKind.Utc);
+                queryable = queryable.Where(r => r.PublishedAt < maxDate.Value);
+            }
 
-            
-            
+
+
 
             // Sayfalama işlemi
             var totalItems = await queryable.CountAsync();
@@ -124,7 +136,9 @@ namespace FinalProjectWebApi.DataAccess.Concrete
                int pageNumber,
                int pageSize,
                string? keyword,
-               int? categoryId
+               int? categoryId,
+               DateTime? minDate,
+               DateTime? maxDate
              )
         {
             var query = _context.Researches
@@ -140,8 +154,18 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             {
                 query = query.Where(r => r.CategoryId == categoryId.Value);
             }
+            if (minDate.HasValue)
+            {
+                minDate = DateTime.SpecifyKind(minDate.Value, DateTimeKind.Utc);
+                query = query.Where(r => r.PublishedAt > minDate.Value);
+            }
+            if (maxDate.HasValue)
+            {
+                maxDate = DateTime.SpecifyKind(maxDate.Value, DateTimeKind.Utc);
+                query = query.Where(r => r.PublishedAt < maxDate.Value);
+            }
 
-            
+
 
             int totalCount = await query.CountAsync();
             var researches = await query

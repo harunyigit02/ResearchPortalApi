@@ -36,7 +36,9 @@ namespace FinalProjectWebApi.Controllers
         public async Task<IActionResult> GetUserResearches(
             [FromQuery] string? keyword,
             [FromQuery] int? categoryId,
-            
+            [FromQuery] DateTime? minDate,
+            [FromQuery] DateTime? maxDate,
+
             int pageNumber = 1,
             int pageSize = 10
            )
@@ -53,7 +55,7 @@ namespace FinalProjectWebApi.Controllers
                 return Forbid();
             }
 
-            var researches = await _researchService.GetPagedResearhesByUserIdAsync(int.Parse(userId),pageNumber,pageSize,keyword,categoryId);
+            var researches = await _researchService.GetPagedResearhesByUserIdAsync(int.Parse(userId),pageNumber,pageSize,keyword,categoryId, minDate, maxDate);
             return Ok(researches);
         }
 
@@ -63,6 +65,8 @@ namespace FinalProjectWebApi.Controllers
             
             [FromQuery] int? categoryId,
             [FromQuery] string? keyword,
+            [FromQuery] DateTime? minDate,
+            [FromQuery] DateTime? maxDate,
 
             int pageNumber = 1,
             int pageSize = 10
@@ -70,7 +74,7 @@ namespace FinalProjectWebApi.Controllers
 
             )
         {
-            var result = await _researchService.GetCompletedResearchesAsync(pageNumber,pageSize,categoryId,keyword);
+            var result = await _researchService.GetCompletedResearchesAsync(pageNumber,pageSize,categoryId,keyword,minDate,maxDate);
             return Ok(result);
         }
 

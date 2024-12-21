@@ -1,4 +1,5 @@
-﻿using FinalProjectWebApi.Entities.Concrete;
+﻿using FinalProjectWebApi.Entities.Abstract;
+using FinalProjectWebApi.Entities.Concrete;
 
 namespace FinalProjectWebApi.Business.Abstract
 {
@@ -6,8 +7,14 @@ namespace FinalProjectWebApi.Business.Abstract
     {
         Task<List<ResearchRequirement>> GetResearchRequirementsAsync();
         Task<ResearchRequirement> GetResearchRequirementByIdAsync(int id);
-        Task<Dictionary<string, object>> GetResearchRequirementByResearchIdAsync(int researchId);
-        Task<List<Research>> GetMatchedResearchRequirementsAsync(ParticipantInfo participantInfo);
+        Task<ResearchRequirement> GetResearchRequirementByResearchIdAsync(int researchId);
+        Task<PagingResult<Research>> GetMatchedResearchRequirementsAsync(ParticipantInfo participant,
+    int pageNumber,
+    int pageSize,
+    string? keyword,
+    int? categoryId,
+    DateTime? minDate,
+    DateTime? maxDate);
         Task<ResearchRequirement> AddResearchRequirementAsync(ResearchRequirement researchRequirement);
         Task<ResearchRequirement> UpdateResearchRequirementAsync(ResearchRequirement resreq);
         Task DeleteResearchRequirementAsync(int id);

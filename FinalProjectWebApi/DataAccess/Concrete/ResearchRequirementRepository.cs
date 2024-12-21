@@ -1,4 +1,5 @@
 ﻿using FinalProjectWebApi.DataAccess.Abstract;
+using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,61 +40,94 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         {
             return await _context.ResearchRequirements.FindAsync(id);
         }
-        public async Task<Dictionary<string, object>> GetByResearchId(int researchId)
+        public async Task<ResearchRequirement> GetByResearchId(int researchId)
         {
             var requirement = await _context.ResearchRequirements
+
         .FirstOrDefaultAsync(rr => rr.ResearchId == researchId);
 
-            if (requirement == null)
-                return null;
+            return requirement;
+                
 
             // Tüm özellikleri kontrol ederek sadece null olmayanları ekliyoruz
-            var result = requirement.GetType()
-                .GetProperties() // Modelin tüm özelliklerini al
-                .Where(prop => prop.GetValue(requirement) != null) // Null olmayanları filtrele
-                .ToDictionary(
-                    prop => prop.Name, // Özellik adını al
-                    prop => prop.GetValue(requirement) // Özellik değerini al
-                );
+            
 
-            return result;
+            
 
         }
 
+       
 
-        public async Task<List<Research>> GetMatchingResearches(ParticipantInfo participant)
+
+        public async Task<PagingResult<Research>> GetMatchingResearchesAsync(
+    ParticipantInfo participant,
+    int pageNumber,
+    int pageSize,
+    string? keyword,
+    int? categoryId,
+    DateTime? minDate,
+    DateTime? maxDate)
         {
-            // Katılımcı bilgileri ile eşleşen araştırmaları filtreliyoruz
-            var matchingResearches = await _context.ResearchRequirements
+            var queryable = _context.ResearchRequirements
                 .Where(r =>
-                    ( r.MinAge== null || r.MinAge <= participant.Age && r.MaxAge== null || r.MaxAge >= participant.Age) &&
-                    // Gender listesinde katılımcının cinsiyetinin olup olmadığını kontrol ediyoruz
-                    r.Gender == null || r.Gender.Contains(participant.Gender) &&
-                    // Location listesinde katılımcının lokasyonunun olup olmadığını kontrol ediyoruz
-                    r.Location== null || r.Location.Contains(participant.Location) &&
-                    // EducationLevel listesinde katılımcının eğitim seviyesinin olup olmadığını kontrol ediyoruz
-                    r.EducationLevel== null || r.EducationLevel.Contains(participant.EducationLevel) &&
-                    // Occupation listesinde katılımcının mesleğinin olup olmadığını kontrol ediyoruz
-                    r.Occupation== null || r.Occupation.Contains(participant.Occupation) &&
-                    // Ethnicity listesinde katılımcının etnik kimliğinin olup olmadığını kontrol ediyoruz
-                    r.Ethnicity == null || r.Ethnicity.Contains(participant.Ethnicity) &&
-                    // MaritalStatus listesinde katılımcının medeni durumunun olup olmadığını kontrol ediyoruz
-                    r.MaritalStatus == null || r.MaritalStatus.Contains(participant.MaritalStatus) &&
-                    // ParentalStatus listesinde katılımcının ebeveynlik durumunun olup olmadığını kontrol ediyoruz
-                    r.ParentalStatus == null || r.ParentalStatus.Contains(participant.ParentalStatus) &&
-                    // ChildStatus listesinde katılımcının çocuk durumu olup olmadığını kontrol ediyoruz
-                     r.ChildStatus == null || r.ChildStatus.Contains(participant.ChildStatus) &&
-                    // DisabilityStatus listesinde katılımcının engellilik durumunun olup olmadığını kontrol ediyoruz
-                    r.DisabilityStatus == null || r.DisabilityStatus.Contains(participant.DisabilityStatus) &&
-                    // HousingType listesinde katılımcının konut türünün olup olmadığını kontrol ediyoruz
-                    r.HousingType == null || r.HousingType.Contains(participant.HousingType)
+                    (r.MinAge == null || r.MinAge <= participant.Age) &&
+                    (r.MaxAge == null || r.MaxAge >= participant.Age) &&
+                    (r.Gender == null || r.Gender.Contains(participant.Gender)) &&
+                    (r.Location == null || r.Location.Contains(participant.Location)) &&
+                    (r.EducationLevel == null || r.EducationLevel.Contains(participant.EducationLevel)) &&
+                    (r.Occupation == null || r.Occupation.Contains(participant.Occupation)) &&
+                    (r.Ethnicity == null || r.Ethnicity.Contains(participant.Ethnicity)) &&
+                    (r.MaritalStatus == null || r.MaritalStatus.Contains(participant.MaritalStatus)) &&
+                    (r.ParentalStatus == null || r.ParentalStatus.Contains(participant.ParentalStatus)) &&
+                    (r.ChildStatus == null || r.ChildStatus.Contains(participant.ChildStatus)) &&
+                    (r.DisabilityStatus == null || r.DisabilityStatus.Contains(participant.DisabilityStatus)) &&
+                    (r.HousingType == null || r.HousingType.Contains(participant.HousingType)) &&
+                    r.Research.IsCompleted == true
                 )
                 // İlişkili Research tablosunu yükle
                 .Include(r => r.Research)
-                .Select(r => r.Research)
+                .ThenInclude(r => r.Questions)
+                .ThenInclude(q => q.Options)
+                .Select(r => r.Research);
+
+            // Arama işlemi
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                var lowerKeyword = keyword.ToLower();
+                queryable = queryable.Where(r => r.Title.ToLower().Contains(lowerKeyword) || r.Description.ToLower().Contains(lowerKeyword));
+            }
+
+            // Kategori filtrelemesi
+            if (categoryId.HasValue)
+            {
+                queryable = queryable.Where(r => r.CategoryId == categoryId.Value);
+            }
+            if (minDate.HasValue)
+            {
+                minDate = DateTime.SpecifyKind(minDate.Value, DateTimeKind.Utc);
+                queryable = queryable.Where(r=>r.PublishedAt>minDate.Value);
+            }
+            if (maxDate.HasValue)
+            {
+                maxDate = DateTime.SpecifyKind(maxDate.Value, DateTimeKind.Utc);
+                queryable = queryable.Where(r => r.PublishedAt < maxDate.Value);
+            }
+            
+
+            // Sayfalama işlemi
+            var totalItems = await queryable.CountAsync();
+            var researches = await queryable
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
-            return matchingResearches;
+            return new PagingResult<Research>
+            {
+                Items = researches,
+                TotalItems = totalItems,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
 
