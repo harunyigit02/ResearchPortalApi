@@ -6,7 +6,7 @@ namespace FinalProjectWebApi.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class EnumController:ControllerBase
+    public class EnumController : ControllerBase
     {
         [HttpGet("gender")]
         public IActionResult GetGenderEnum()
@@ -28,6 +28,7 @@ namespace FinalProjectWebApi.Controllers
                                        .ToList();
             return Ok(educationLevels);
         }
+
 
         // Occupation enum'ını döndürme
         [HttpGet("occupation")]

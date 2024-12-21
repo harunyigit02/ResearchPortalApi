@@ -3,6 +3,7 @@ using System;
 using FinalProjectWebApi.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinalProjectWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241218081649_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,39 +256,49 @@ namespace FinalProjectWebApi.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int[]>("ChildStatus")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("DisabilityStatus")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("EducationLevel")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("Ethnicity")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("Gender")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("HousingType")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("Location")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("MaritalStatus")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
-                    b.Property<int?>("MaxAge")
+                    b.Property<int>("MaxAge")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("MinAge")
+                    b.Property<int>("MinAge")
                         .HasColumnType("integer");
 
                     b.Property<int[]>("Occupation")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("ParentalStatus")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int>("ResearchId")

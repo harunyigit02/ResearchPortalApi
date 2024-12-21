@@ -2,11 +2,11 @@
 {
     public enum MaritalStatus
     {
-        Single,              // Bekar
-        Married,             // Evli
-        Divorced,            // Boşanmış
-        Widowed,             // Dul
-        Separated,           // Ayrı
-        Other
+        Single=1,              // Bekar
+        Married=2,             // Evli
+        Divorced=3,            // Boşanmış
+        Widowed=4,             // Dul
+        Separated=5,           // Ayrı
+        Other=6
     }
 }

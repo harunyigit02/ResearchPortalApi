@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FinalProjectWebApi.Migrations
 {
-    public partial class ConditionFieldsModelEntegration : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,136 +22,6 @@ namespace FinalProjectWebApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ChildStatuses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Value = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChildStatuses", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DisabilityStatuses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Value = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DisabilityStatuses", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EducationLevels",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Value = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EducationLevels", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Ethnicities",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Value = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ethnicities", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Genders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Value = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Genders", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "HousingTypes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Value = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HousingTypes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Locations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Value = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Locations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MaritalStatuses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Value = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MaritalStatuses", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Occupations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Value = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Occupations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ParentalStatuses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Value = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ParentalStatuses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -227,16 +97,16 @@ namespace FinalProjectWebApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     Age = table.Column<int>(type: "integer", nullable: false),
-                    Gender = table.Column<string>(type: "text", nullable: false),
-                    Location = table.Column<string>(type: "text", nullable: false),
-                    EducationLevel = table.Column<string>(type: "text", nullable: false),
-                    Occupation = table.Column<string>(type: "text", nullable: false),
-                    Ethnicity = table.Column<string>(type: "text", nullable: false),
-                    MaritalStatus = table.Column<string>(type: "text", nullable: false),
-                    ParentalStatus = table.Column<string>(type: "text", nullable: false),
-                    ChildStatus = table.Column<string>(type: "text", nullable: false),
-                    DisabilityStatus = table.Column<string>(type: "text", nullable: false),
-                    HousingType = table.Column<string>(type: "text", nullable: false)
+                    Gender = table.Column<int>(type: "integer", nullable: false),
+                    Location = table.Column<int>(type: "integer", nullable: false),
+                    EducationLevel = table.Column<int>(type: "integer", nullable: false),
+                    Occupation = table.Column<int>(type: "integer", nullable: false),
+                    Ethnicity = table.Column<int>(type: "integer", nullable: false),
+                    MaritalStatus = table.Column<int>(type: "integer", nullable: false),
+                    ParentalStatus = table.Column<int>(type: "integer", nullable: false),
+                    ChildStatus = table.Column<int>(type: "integer", nullable: false),
+                    DisabilityStatus = table.Column<int>(type: "integer", nullable: false),
+                    HousingType = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -331,7 +201,17 @@ namespace FinalProjectWebApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ResearchId = table.Column<int>(type: "integer", nullable: false),
                     MinAge = table.Column<int>(type: "integer", nullable: false),
-                    MaxAge = table.Column<int>(type: "integer", nullable: false)
+                    MaxAge = table.Column<int>(type: "integer", nullable: false),
+                    Gender = table.Column<int[]>(type: "integer[]", nullable: false),
+                    Location = table.Column<int[]>(type: "integer[]", nullable: false),
+                    EducationLevel = table.Column<int[]>(type: "integer[]", nullable: false),
+                    Occupation = table.Column<int[]>(type: "integer[]", nullable: false),
+                    Ethnicity = table.Column<int[]>(type: "integer[]", nullable: false),
+                    MaritalStatus = table.Column<int[]>(type: "integer[]", nullable: false),
+                    ParentalStatus = table.Column<int[]>(type: "integer[]", nullable: false),
+                    ChildStatus = table.Column<int[]>(type: "integer[]", nullable: false),
+                    DisabilityStatus = table.Column<int[]>(type: "integer[]", nullable: false),
+                    HousingType = table.Column<int[]>(type: "integer[]", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -427,8 +307,7 @@ namespace FinalProjectWebApi.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ResearchRequirements_ResearchId",
                 table: "ResearchRequirements",
-                column: "ResearchId",
-                unique: true);
+                column: "ResearchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Views_ViewedArticle",
@@ -440,36 +319,6 @@ namespace FinalProjectWebApi.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Answers");
-
-            migrationBuilder.DropTable(
-                name: "ChildStatuses");
-
-            migrationBuilder.DropTable(
-                name: "DisabilityStatuses");
-
-            migrationBuilder.DropTable(
-                name: "EducationLevels");
-
-            migrationBuilder.DropTable(
-                name: "Ethnicities");
-
-            migrationBuilder.DropTable(
-                name: "Genders");
-
-            migrationBuilder.DropTable(
-                name: "HousingTypes");
-
-            migrationBuilder.DropTable(
-                name: "Locations");
-
-            migrationBuilder.DropTable(
-                name: "MaritalStatuses");
-
-            migrationBuilder.DropTable(
-                name: "Occupations");
-
-            migrationBuilder.DropTable(
-                name: "ParentalStatuses");
 
             migrationBuilder.DropTable(
                 name: "ParticipantInfos");

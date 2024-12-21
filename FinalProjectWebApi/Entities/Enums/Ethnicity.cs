@@ -2,13 +2,13 @@
 {
     public enum Ethnicity
     {
-        Caucasian,           // Beyaz
-        Hispanic,            // Hispanik
-        AfricanAmerican,     // Afrikalı Amerikalı
-        Asian,               // Asyalı
-        MiddleEastern,       // Orta Doğulu
-        NativeAmerican,      // Kızılderili
-        PacificIslander,     // Pasifik Adalı
-        Other
+        Caucasian=1,           // Beyaz
+        Hispanic=2,            // Hispanik
+        AfricanAmerican=3,     // Afrikalı Amerikalı
+        Asian=4,               // Asyalı
+        MiddleEastern=5,       // Orta Doğulu
+        NativeAmerican=6,      // Kızılderili
+        PacificIslander=7,     // Pasifik Adalı
+        Other=8
     }
 }

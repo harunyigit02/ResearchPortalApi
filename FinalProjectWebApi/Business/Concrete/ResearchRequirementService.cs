@@ -29,6 +29,11 @@ namespace FinalProjectWebApi.Business.Concrete
         {
             return await _researchRequirementRepository.GetByIdAsync(id);
         }
+        public async Task<Dictionary<string, object>> GetResearchRequirementByResearchIdAsync(int researchId)
+        {
+            return await _researchRequirementRepository.GetByResearchId(researchId);
+        }
+
 
         public async Task<List<ResearchRequirement>> GetResearchRequirementsAsync()
         {
