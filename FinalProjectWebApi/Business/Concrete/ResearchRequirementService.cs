@@ -1,6 +1,7 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.DataAccess;
 using FinalProjectWebApi.DataAccess.Abstract;
+using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,7 +30,7 @@ namespace FinalProjectWebApi.Business.Concrete
         {
             return await _researchRequirementRepository.GetByIdAsync(id);
         }
-        public async Task<Dictionary<string, object>> GetResearchRequirementByResearchIdAsync(int researchId)
+        public async Task<ResearchRequirement> GetResearchRequirementByResearchIdAsync(int researchId)
         {
             return await _researchRequirementRepository.GetByResearchId(researchId);
         }
@@ -39,9 +40,15 @@ namespace FinalProjectWebApi.Business.Concrete
         {
             return await _researchRequirementRepository.GetAllAsync();
         }
-        public async Task<List<Research>> GetMatchedResearchRequirementsAsync(ParticipantInfo participantInfo)
+        public async Task<PagingResult<Research>> GetMatchedResearchRequirementsAsync(ParticipantInfo participant,
+    int pageNumber,
+    int pageSize,
+    string? keyword,
+    int? categoryId,
+    DateTime? minDate,
+    DateTime? maxDate)
         {
-            return await _researchRequirementRepository.GetMatchingResearches(participantInfo);
+            return await _researchRequirementRepository.GetMatchingResearchesAsync(participant, pageNumber, pageSize, keyword,categoryId,minDate,maxDate);
         }
 
         public Task<ResearchRequirement> UpdateResearchRequirementAsync(ResearchRequirement resreq)

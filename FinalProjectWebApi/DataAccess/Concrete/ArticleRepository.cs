@@ -44,7 +44,7 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         {
             return await _context.Articles.FindAsync(id);
         }
-        public async Task<PagingResult<Article>> GetPagedArticlesByUserIdAsync(int userId,int pageNumber,int pageSize,int? categoryId,string? keyword)
+        public async Task<PagingResult<Article>> GetPagedArticlesByUserIdAsync(int userId,int pageNumber,int pageSize,int? categoryId,string? keyword,DateTime? minDate,DateTime? maxDate)
         {
             var query = _context.Articles
                .Where(a => a.PublishedBy == userId);
@@ -56,6 +56,16 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             {
                 var loweredKeyword = keyword.ToLower();
                 query = query.Where(r => r.Title.ToLower().Contains(loweredKeyword) || r.Description.Contains(loweredKeyword));
+            }
+            if (minDate.HasValue)
+            {
+                minDate = DateTime.SpecifyKind(minDate.Value, DateTimeKind.Utc);
+                query = query.Where(r => r.PublishedAt > minDate.Value);
+            }
+            if (maxDate.HasValue)
+            {
+                maxDate = DateTime.SpecifyKind(maxDate.Value, DateTimeKind.Utc);
+                query = query.Where(r => r.PublishedAt < maxDate.Value);
             }
 
             int totalCount = await query.CountAsync();
@@ -77,7 +87,7 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             
         }
 
-        public async Task<PagingResult<Article>> GetArticlesPagedAsync(int pageNumber, int pageSize,int? categoryId,string? keyword)
+        public async Task<PagingResult<Article>> GetArticlesPagedAsync(int pageNumber, int pageSize,int? categoryId,string? keyword,DateTime? minDate, DateTime? maxDate)
         {
             var query = _context.Articles.AsQueryable();
 
@@ -89,6 +99,16 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             {
                 var loweredKeyword = keyword.ToLower();
                 query = query.Where(r=>r.Title.ToLower().Contains(loweredKeyword) || r.Description.Contains(loweredKeyword));
+            }
+            if (minDate.HasValue)
+            {
+                minDate = DateTime.SpecifyKind(minDate.Value, DateTimeKind.Utc);
+                query = query.Where(r => r.PublishedAt > minDate.Value);
+            }
+            if (maxDate.HasValue)
+            {
+                maxDate = DateTime.SpecifyKind(maxDate.Value, DateTimeKind.Utc);
+                query = query.Where(r => r.PublishedAt < maxDate.Value);
             }
 
             var totalItems = await query.CountAsync();

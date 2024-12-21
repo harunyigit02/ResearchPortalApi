@@ -55,7 +55,9 @@ namespace FinalProjectWebApi.Business.Concrete
               int pageNumber,
               int pageSize,
               int? categoryId,
-              string? keyword
+              string? keyword,
+              DateTime? minDate,
+              DateTime? maxDate
             )
               
         {
@@ -63,7 +65,9 @@ namespace FinalProjectWebApi.Business.Concrete
                 pageNumber,
                 pageSize,
                 categoryId,
-                keyword);
+                keyword,
+                minDate,
+                maxDate);
         }
 
         public async Task<Research> UpdateResearchAsync(int id,Research research)
@@ -107,11 +111,13 @@ namespace FinalProjectWebApi.Business.Concrete
             int pageNumber,
             int pageSize,
             string? keyword,
-            int? categoryId
+            int? categoryId,
+            DateTime? minDate,
+            DateTime? maxDate
             
             )
         {
-            var result = await _researchRepository.GetPagedResearchesByUserIdAsync(userId,pageNumber, pageSize,keyword,categoryId);
+            var result = await _researchRepository.GetPagedResearchesByUserIdAsync(userId,pageNumber, pageSize,keyword,categoryId,minDate,maxDate);
             
 
             return result;

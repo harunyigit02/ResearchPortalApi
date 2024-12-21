@@ -32,7 +32,7 @@ namespace FinalProjectWebApi.Controllers
         }
 
         [HttpGet("ResearchsConditions/{researchId}")]
-        public async Task<ActionResult<Dictionary<string, object>>> GetResearchRequirementsByResearchId(int researchId)
+        public async Task<ActionResult<ResearchRequirement>> GetResearchRequirementsByResearchId(int researchId)
         {
             var result = await _researchRequirementService.GetResearchRequirementByResearchIdAsync(researchId);
             return Ok(result);
@@ -47,9 +47,22 @@ namespace FinalProjectWebApi.Controllers
 
 
         // POST api/<ResearchRequirementController>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles ="Admin,Researcher")]
         [HttpPost]
-        public async Task<ResearchRequirement> AddResearchRequirement([FromBody] ResearchRequirement researchRequirement)
+        public async Task<ActionResult<ResearchRequirement>> AddResearchRequirement([FromBody] ResearchRequirement researchRequirement)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (userId == null) 
+            {
+                return Unauthorized();
+            }
+            if(role != "Admin" && role != "Researcher")
+            {
+                return Forbid();
+            }
+
             return  await _researchRequirementService.AddResearchRequirementAsync(researchRequirement);
         }
 
@@ -58,11 +71,16 @@ namespace FinalProjectWebApi.Controllers
 
         [Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("MatchedResearchRequirements")]
-        public async Task<IActionResult> GetMatchedResearchRequirements()
+        public async Task<IActionResult> GetMatchedResearchRequirements(string? keyword,
+    int? categoryId,DateTime? minDate,
+    DateTime? maxDate
+    , int pageNumber=1,
+    int pageSize=5
+    )
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var participantInfo= await _participantInfoService.GetParticipantInfosByUserIdAsync(int.Parse(userId));
-            var result = await _researchRequirementService.GetMatchedResearchRequirementsAsync(participantInfo);
+            var result = await _researchRequirementService.GetMatchedResearchRequirementsAsync(participantInfo, pageNumber, pageSize, keyword, categoryId,minDate,maxDate);
             return Ok(result);
         }
 

@@ -4,6 +4,8 @@
     {
         Ankara=1,
         İstanbul=2,
-        İzmir=3
+        İzmir=3,
+        Adana=4,
+        Sakarya=5,
     }
 }

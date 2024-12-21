@@ -30,12 +30,14 @@ namespace FinalProjectWebApi.Controllers
         public async Task<ActionResult<PagingResult<ArticleDto>>> GetArticlesPagedAsync(
             int? categoryId,
             string? keyword,
+            DateTime? minDate,
+            DateTime? maxDate,
             int pageNumber = 1,
             int pageSize = 10
             )
         {
             // Sayfalama işlemi için gerekli parametreleri alıyoruz
-            var result = await _articleService.GetArticlesPagedAsync(pageNumber, pageSize,categoryId,keyword);
+            var result = await _articleService.GetArticlesPagedAsync(pageNumber, pageSize,categoryId,keyword,minDate,maxDate);
 
             // PagedResult döndürüyoruz
             return Ok(result);
@@ -55,7 +57,7 @@ namespace FinalProjectWebApi.Controllers
         }
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles ="Admin,Researcher")]
         [HttpGet("UserArticles")]
-        public async Task<ActionResult<PagingResult<ArticleDto>>> GetUserArticles(int? categoryId,string? keyword,int pageNumber = 1, int pageSize = 10)
+        public async Task<ActionResult<PagingResult<ArticleDto>>> GetUserArticles(int? categoryId,string? keyword,DateTime? minDate,DateTime? maxDate,int pageNumber = 1, int pageSize = 10)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
@@ -69,7 +71,7 @@ namespace FinalProjectWebApi.Controllers
                 return Forbid();
             }
 
-            var articles = await _articleService.GetArticlesByUserIdAsync(int.Parse(userId),pageNumber,pageSize,categoryId,keyword);
+            var articles = await _articleService.GetArticlesByUserIdAsync(int.Parse(userId),pageNumber,pageSize,categoryId,keyword,minDate,maxDate);
             return Ok(articles);
         }
 
