@@ -13,15 +13,38 @@ namespace FinalProjectWebApi.DataAccess.Configurations
 
 
             builder.HasOne(rr => rr.Research)
-                   .WithOne()  // Research, Requirement'ları takip etmez
-                   .HasForeignKey<ResearchRequirement>(x => x.ResearchId)
+                   .WithMany()  // Research, Requirement'ları takip etmez
+                   .HasForeignKey(rr => rr.ResearchId)
                    .OnDelete(DeleteBehavior.Cascade)
-                   .HasPrincipalKey<Research>(r => r.Id);
+                   .HasPrincipalKey(r => r.Id);
 
-            
+            builder.Property(r => r.Ethnicity)
+                   .HasColumnType("integer[]");
+            builder.Property(r => r.Gender)
+                   .HasColumnType("integer[]");
+            builder.Property(r => r.EducationLevel)
+                   .HasColumnType("integer[]");
+            builder.Property(r => r.HousingType)
+                   .HasColumnType("integer[]");
+            builder.Property(r => r.ChildStatus)
+                   .HasColumnType("integer[]");
+            builder.Property(r => r.ParentalStatus)
+                   .HasColumnType("integer[]");
+            builder.Property(r => r.DisabilityStatus)
+                   .HasColumnType("integer[]");
+            builder.Property(r => r.MaritalStatus)
+                   .HasColumnType("integer[]");
+            builder.Property(r => r.Occupation)
+                   .HasColumnType("integer[]");
 
-           
-        
+
+
+
+
+
+
+
+
         }
     }
 }

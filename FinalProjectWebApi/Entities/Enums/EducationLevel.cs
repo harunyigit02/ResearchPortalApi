@@ -2,13 +2,13 @@
 {
     public enum EducationLevel
     {
-        NoFormalEducation,   // Resmi eğitim yok
-        PrimarySchool,       // İlkokul
-        SecondarySchool,     // Ortaokul
-        HighSchool,          // Lise
-        AssociateDegree,     // Ön Lisans
-        BachelorDegree,      // Lisans
-        MasterDegree,        // Yüksek Lisans
-        DoctorateDegree
+        NoFormalEducation=1,   // Resmi eğitim yok
+        PrimarySchool=2,       // İlkokul
+        SecondarySchool=3,     // Ortaokul
+        HighSchool=4,          // Lise
+        AssociateDegree=5,     // Ön Lisans
+        BachelorDegree=6,      // Lisans
+        MasterDegree=7,        // Yüksek Lisans
+        DoctorateDegree=8
     }
 }

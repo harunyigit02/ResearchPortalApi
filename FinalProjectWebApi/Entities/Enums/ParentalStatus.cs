@@ -2,16 +2,16 @@
 {
     public enum ParentalStatus
     {
-        NotParent,             // Ebeveyn değil               // Ebeveyn
-        SingleParent,          // Tek ebeveyn
-        TwoParentHousehold,    // İki ebeveynli aile
-        DivorcedParent,        // Boşanmış ebeveyn
-        SeparatedParent,       // Ayrı yaşayan ebeveyn
-        CoParenting,           // Ortak ebeveynlik
-        StepParent,            // Üvey ebeveyn
-        AdoptiveParent,        // Evlat edinmiş ebeveyn
-        FosterParent,          // Geçici bakıcı ebeveyn
-        GrandparentAsParent,   // Büyükanne/büyükbaba ebeveyni
-        Other
+        NotParent=1,             // Ebeveyn değil
+        SingleParent=2,          // Tek ebeveyn
+        TwoParentHousehold=3,    // İki ebeveynli aile
+        DivorcedParent=4,        // Boşanmış ebeveyn
+        SeparatedParent=5,       // Ayrı yaşayan ebeveyn
+        CoParenting=6,           // Ortak ebeveynlik
+        StepParent=7,            // Üvey ebeveyn
+        AdoptiveParent=8,        // Evlat edinmiş ebeveyn
+        FosterParent=9,          // Geçici bakıcı ebeveyn
+        GrandparentAsParent=10,   // Büyükanne/büyükbaba ebeveyni
+        Other=11
     }
 }

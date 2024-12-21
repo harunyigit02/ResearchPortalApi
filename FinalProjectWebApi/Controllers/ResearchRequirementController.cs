@@ -17,7 +17,7 @@ namespace FinalProjectWebApi.Controllers
         private readonly IResearchRequirementService _researchRequirementService;
         private readonly IParticipantInfoService _participantInfoService;
 
-        public ResearchRequirementController(IResearchRequirementService researchRequirementService, IParticipantInfoService participantInfoService)
+        public ResearchRequirementController(IResearchRequirementService researchRequirementService,IParticipantInfoService participantInfoService)
         {
             _researchRequirementService = researchRequirementService;
             _participantInfoService = participantInfoService;
@@ -28,6 +28,13 @@ namespace FinalProjectWebApi.Controllers
         public async Task<ActionResult<IEnumerable<ResearchRequirement>>> GetResearchRequirements()
         {
             var result = await _researchRequirementService.GetResearchRequirementsAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("ResearchsConditions/{researchId}")]
+        public async Task<ActionResult<Dictionary<string, object>>> GetResearchRequirementsByResearchId(int researchId)
+        {
+            var result = await _researchRequirementService.GetResearchRequirementByResearchIdAsync(researchId);
             return Ok(result);
         }
 
@@ -45,6 +52,7 @@ namespace FinalProjectWebApi.Controllers
         {
             return  await _researchRequirementService.AddResearchRequirementAsync(researchRequirement);
         }
+
         
 
 
@@ -57,6 +65,7 @@ namespace FinalProjectWebApi.Controllers
             var result = await _researchRequirementService.GetMatchedResearchRequirementsAsync(participantInfo);
             return Ok(result);
         }
+
 
         // PUT api/<ResearchRequirementController>/5
         [HttpPut("{id}")]

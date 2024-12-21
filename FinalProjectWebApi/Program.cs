@@ -47,7 +47,6 @@ builder.Services.AddScoped<IResearchRequirementRepository, ResearchRequirementRe
 
 
 
-
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<IEmailService, EmailService>();
 // Add services to the container.

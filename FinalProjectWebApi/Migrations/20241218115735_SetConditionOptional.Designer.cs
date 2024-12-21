@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinalProjectWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241215095840_ConditionFieldsModelEntegration")]
-    partial class ConditionFieldsModelEntegration
+    [Migration("20241218115735_SetConditionOptional")]
+    partial class SetConditionOptional
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -105,159 +105,6 @@ namespace FinalProjectWebApi.Migrations
                     b.ToTable("Categories", (string)null);
                 });
 
-            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.ChildStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ChildStatuses", (string)null);
-                });
-
-            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.DisabilityStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DisabilityStatuses", (string)null);
-                });
-
-            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.EducationLevel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EducationLevels", (string)null);
-                });
-
-            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Ethnicity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Ethnicities", (string)null);
-                });
-
-            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Gender", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Genders", (string)null);
-                });
-
-            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.HousingType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("HousingTypes", (string)null);
-                });
-
-            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Location", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Locations", (string)null);
-                });
-
-            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.MaritalStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MaritalStatuses", (string)null);
-                });
-
-            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Occupation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Occupations", (string)null);
-                });
-
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Option", b =>
                 {
                     b.Property<int>("Id")
@@ -280,23 +127,6 @@ namespace FinalProjectWebApi.Migrations
                     b.ToTable("Options", (string)null);
                 });
 
-            modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.ParentalStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ParentalStatuses", (string)null);
-                });
-
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.ParticipantInfo", b =>
                 {
                     b.Property<int>("Id")
@@ -308,45 +138,35 @@ namespace FinalProjectWebApi.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ChildStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("ChildStatus")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("DisabilityStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("DisabilityStatus")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("EducationLevel")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("EducationLevel")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Ethnicity")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Ethnicity")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Gender")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("HousingType")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("HousingType")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Location")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("MaritalStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("MaritalStatus")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Occupation")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Occupation")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("ParentalStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("ParentalStatus")
+                        .HasColumnType("integer");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
@@ -435,19 +255,48 @@ namespace FinalProjectWebApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("MaxAge")
+                    b.Property<int[]>("ChildStatus")
+                        .HasColumnType("integer[]");
+
+                    b.Property<int[]>("DisabilityStatus")
+                        .HasColumnType("integer[]");
+
+                    b.Property<int[]>("EducationLevel")
+                        .HasColumnType("integer[]");
+
+                    b.Property<int[]>("Ethnicity")
+                        .HasColumnType("integer[]");
+
+                    b.Property<int[]>("Gender")
+                        .HasColumnType("integer[]");
+
+                    b.Property<int[]>("HousingType")
+                        .HasColumnType("integer[]");
+
+                    b.Property<int[]>("Location")
+                        .HasColumnType("integer[]");
+
+                    b.Property<int[]>("MaritalStatus")
+                        .HasColumnType("integer[]");
+
+                    b.Property<int?>("MaxAge")
                         .HasColumnType("integer");
 
-                    b.Property<int>("MinAge")
+                    b.Property<int?>("MinAge")
                         .HasColumnType("integer");
+
+                    b.Property<int[]>("Occupation")
+                        .HasColumnType("integer[]");
+
+                    b.Property<int[]>("ParentalStatus")
+                        .HasColumnType("integer[]");
 
                     b.Property<int>("ResearchId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ResearchId")
-                        .IsUnique();
+                    b.HasIndex("ResearchId");
 
                     b.ToTable("ResearchRequirements");
                 });
@@ -626,8 +475,8 @@ namespace FinalProjectWebApi.Migrations
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.ResearchRequirement", b =>
                 {
                     b.HasOne("FinalProjectWebApi.Entities.Concrete.Research", "Research")
-                        .WithOne()
-                        .HasForeignKey("FinalProjectWebApi.Entities.Concrete.ResearchRequirement", "ResearchId")
+                        .WithMany()
+                        .HasForeignKey("ResearchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

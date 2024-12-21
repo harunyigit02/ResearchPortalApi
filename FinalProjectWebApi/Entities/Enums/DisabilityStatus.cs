@@ -2,11 +2,11 @@
 {
     public enum DisabilityStatus
     {
-        None,                // Engelli değil
-        PhysicalDisability,  // Fiziksel engellilik
-        MentalDisability,    // Zihinsel engellilik
-        Both,                // Hem fiziksel hem zihinsel engellilik
-        Other
+        None=1,                // Engelli değil
+        PhysicalDisability=2,  // Fiziksel engellilik
+        MentalDisability=3,    // Zihinsel engellilik
+        Both=4,                // Hem fiziksel hem zihinsel engellilik
+        Other=5
     }
 }
 

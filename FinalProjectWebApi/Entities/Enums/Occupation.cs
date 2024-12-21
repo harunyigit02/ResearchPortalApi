@@ -2,15 +2,15 @@
 {
     public enum Occupation
     {
-        Unemployed,          // İşsiz
-        Student,             // Öğrenci
-        Professional,        // Profesyonel
-        Teacher,             // Öğretmen
-        Engineer,            // Mühendis
-        Doctor,              // Doktor
-        Lawyer,              // Avukat
-        BusinessOwner,       // İşletme Sahibi
-        Freelancer,          // Serbest Çalışan
-        Other
+        Unemployed=1,          // İşsiz
+        Student=2,             // Öğrenci
+        Professional=3,        // Profesyonel
+        Teacher=4,             // Öğretmen
+        Engineer=5,            // Mühendis
+        Doctor=6,              // Doktor
+        Lawyer=7,              // Avukat
+        BusinessOwner=8,       // İşletme Sahibi
+        Freelancer=9,          // Serbest Çalışan
+        Other=10
     }
 }

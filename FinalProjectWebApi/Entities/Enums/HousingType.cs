@@ -2,10 +2,10 @@
 {
     public enum HousingType
     {
-        Own,                // Kendi malı
-        Rent,               // Kirada
-        LivingWithFamily,   // Aileyle yaşıyor
-        Shelter,            // Sığınma evi
-        Other
+        Own=1,                // Kendi malı
+        Rent=2,               // Kirada
+        LivingWithFamily=3,   // Aileyle yaşıyor
+        Shelter=4,            // Sığınma evi
+        Other=5
     }
 }
