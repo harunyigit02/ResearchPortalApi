@@ -12,6 +12,12 @@ namespace FinalProjectWebApi.Entities.Concrete
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int UserId { get; set; }
+        
+        public string FirstName { get; set; }
+        
+        public string LastName { get; set; }
+        
+        public University University { get; set; }
         public int Age { get; set; }
         public Gender Gender { get; set; }
         public Location Location { get; set; }

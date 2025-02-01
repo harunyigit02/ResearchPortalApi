@@ -148,11 +148,19 @@ namespace FinalProjectWebApi.Migrations
                     b.Property<int>("Ethnicity")
                         .HasColumnType("integer");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Gender")
                         .HasColumnType("integer");
 
                     b.Property<int>("HousingType")
                         .HasColumnType("integer");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("Location")
                         .HasColumnType("integer");
@@ -164,6 +172,9 @@ namespace FinalProjectWebApi.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("ParentalStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("University")
                         .HasColumnType("integer");
 
                     b.Property<int>("UserId")
