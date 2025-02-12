@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinalProjectWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241218081649_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250212155312_AnswerUpdate2")]
+    partial class AnswerUpdate2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,9 +35,25 @@ namespace FinalProjectWebApi.Migrations
                     b.Property<int>("OptionId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("ParticipantId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ParticipatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OptionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Answers", (string)null);
                 });
@@ -150,11 +166,19 @@ namespace FinalProjectWebApi.Migrations
                     b.Property<int>("Ethnicity")
                         .HasColumnType("integer");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Gender")
                         .HasColumnType("integer");
 
                     b.Property<int>("HousingType")
                         .HasColumnType("integer");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("Location")
                         .HasColumnType("integer");
@@ -166,6 +190,9 @@ namespace FinalProjectWebApi.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("ParentalStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("University")
                         .HasColumnType("integer");
 
                     b.Property<int>("UserId")
@@ -256,49 +283,39 @@ namespace FinalProjectWebApi.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int[]>("ChildStatus")
-                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("DisabilityStatus")
-                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("EducationLevel")
-                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("Ethnicity")
-                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("Gender")
-                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("HousingType")
-                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("Location")
-                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("MaritalStatus")
-                        .IsRequired()
                         .HasColumnType("integer[]");
 
-                    b.Property<int>("MaxAge")
+                    b.Property<int?>("MaxAge")
                         .HasColumnType("integer");
 
-                    b.Property<int>("MinAge")
+                    b.Property<int?>("MinAge")
                         .HasColumnType("integer");
 
                     b.Property<int[]>("Occupation")
-                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("ParentalStatus")
-                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int>("ResearchId")
@@ -408,7 +425,21 @@ namespace FinalProjectWebApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("FinalProjectWebApi.Entities.Concrete.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FinalProjectWebApi.Entities.Concrete.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Options");
+
+                    b.Navigation("Question");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Article", b =>

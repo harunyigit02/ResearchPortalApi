@@ -9,12 +9,25 @@ namespace FinalProjectWebApi.Entities.Concrete
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
+        public int QuestionId { get; set; }
         public int OptionId { get; set; }
-        
+
+        public int ParticipantId { get; set; }
+
+        public DateTime ParticipatedAt { get; set; }
+
+
+
 
 
         [JsonIgnore]
-        public Option? Options { get; set; }
+
+        public Question? Question { get; set; }
+        [JsonIgnore]
+        public Option? Option { get; set; }
+        [JsonIgnore]
+        public User? User { get; set; }
 
     }
 }

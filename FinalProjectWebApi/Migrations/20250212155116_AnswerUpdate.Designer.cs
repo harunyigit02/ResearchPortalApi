@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinalProjectWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241218115735_SetConditionOptional")]
-    partial class SetConditionOptional
+    [Migration("20250212155116_AnswerUpdate")]
+    partial class AnswerUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,6 +33,9 @@ namespace FinalProjectWebApi.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("OptionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ParticipantId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -150,11 +153,19 @@ namespace FinalProjectWebApi.Migrations
                     b.Property<int>("Ethnicity")
                         .HasColumnType("integer");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Gender")
                         .HasColumnType("integer");
 
                     b.Property<int>("HousingType")
                         .HasColumnType("integer");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("Location")
                         .HasColumnType("integer");
@@ -166,6 +177,9 @@ namespace FinalProjectWebApi.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("ParentalStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("University")
                         .HasColumnType("integer");
 
                     b.Property<int>("UserId")

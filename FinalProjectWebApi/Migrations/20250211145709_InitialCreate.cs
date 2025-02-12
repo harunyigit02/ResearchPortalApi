@@ -96,6 +96,9 @@ namespace FinalProjectWebApi.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<int>(type: "integer", nullable: false),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false),
+                    University = table.Column<int>(type: "integer", nullable: false),
                     Age = table.Column<int>(type: "integer", nullable: false),
                     Gender = table.Column<int>(type: "integer", nullable: false),
                     Location = table.Column<int>(type: "integer", nullable: false),
@@ -200,18 +203,18 @@ namespace FinalProjectWebApi.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ResearchId = table.Column<int>(type: "integer", nullable: false),
-                    MinAge = table.Column<int>(type: "integer", nullable: false),
-                    MaxAge = table.Column<int>(type: "integer", nullable: false),
-                    Gender = table.Column<int[]>(type: "integer[]", nullable: false),
-                    Location = table.Column<int[]>(type: "integer[]", nullable: false),
-                    EducationLevel = table.Column<int[]>(type: "integer[]", nullable: false),
-                    Occupation = table.Column<int[]>(type: "integer[]", nullable: false),
-                    Ethnicity = table.Column<int[]>(type: "integer[]", nullable: false),
-                    MaritalStatus = table.Column<int[]>(type: "integer[]", nullable: false),
-                    ParentalStatus = table.Column<int[]>(type: "integer[]", nullable: false),
-                    ChildStatus = table.Column<int[]>(type: "integer[]", nullable: false),
-                    DisabilityStatus = table.Column<int[]>(type: "integer[]", nullable: false),
-                    HousingType = table.Column<int[]>(type: "integer[]", nullable: false)
+                    MinAge = table.Column<int>(type: "integer", nullable: true),
+                    MaxAge = table.Column<int>(type: "integer", nullable: true),
+                    Gender = table.Column<int[]>(type: "integer[]", nullable: true),
+                    Location = table.Column<int[]>(type: "integer[]", nullable: true),
+                    EducationLevel = table.Column<int[]>(type: "integer[]", nullable: true),
+                    Occupation = table.Column<int[]>(type: "integer[]", nullable: true),
+                    Ethnicity = table.Column<int[]>(type: "integer[]", nullable: true),
+                    MaritalStatus = table.Column<int[]>(type: "integer[]", nullable: true),
+                    ParentalStatus = table.Column<int[]>(type: "integer[]", nullable: true),
+                    ChildStatus = table.Column<int[]>(type: "integer[]", nullable: true),
+                    DisabilityStatus = table.Column<int[]>(type: "integer[]", nullable: true),
+                    HousingType = table.Column<int[]>(type: "integer[]", nullable: true)
                 },
                 constraints: table =>
                 {
