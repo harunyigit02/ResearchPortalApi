@@ -3,6 +3,7 @@ using System;
 using FinalProjectWebApi.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinalProjectWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250211145709_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,22 +35,9 @@ namespace FinalProjectWebApi.Migrations
                     b.Property<int>("OptionId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ParticipantId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("ParticipatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("OptionId");
-
-                    b.HasIndex("ParticipantId");
-
-                    b.HasIndex("QuestionId");
 
                     b.ToTable("Answers", (string)null);
                 });
@@ -414,29 +403,13 @@ namespace FinalProjectWebApi.Migrations
 
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Answer", b =>
                 {
-                    b.HasOne("FinalProjectWebApi.Entities.Concrete.Option", "Option")
+                    b.HasOne("FinalProjectWebApi.Entities.Concrete.Option", "Options")
                         .WithMany("Answers")
                         .HasForeignKey("OptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FinalProjectWebApi.Entities.Concrete.User", "User")
-                        .WithMany()
-                        .HasForeignKey("ParticipantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FinalProjectWebApi.Entities.Concrete.Question", "Question")
-                        .WithMany()
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Option");
-
-                    b.Navigation("Question");
-
-                    b.Navigation("User");
+                    b.Navigation("Options");
                 });
 
             modelBuilder.Entity("FinalProjectWebApi.Entities.Concrete.Article", b =>

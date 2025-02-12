@@ -10,12 +10,24 @@ namespace FinalProjectWebApi.DataAccess.Configurations
         {
             builder.ToTable("Answers");
             builder.HasKey(x => x.Id);
-            builder.HasOne(x => x.Options)
+            builder.HasOne(x => x.Option)
                 .WithMany(a=>a.Answers)
                 .HasForeignKey(a => a.OptionId)
                 .HasPrincipalKey(a => a.Id)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
+            builder.HasOne(x => x.Question)
+                .WithMany()
+                .HasForeignKey(a => a.QuestionId)
+                .HasPrincipalKey(a => a.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(a => a.ParticipantId)
+                .HasPrincipalKey(a => a.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
