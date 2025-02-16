@@ -9,6 +9,7 @@ namespace FinalProjectWebApi.DataAccess.Abstract
         
         Task<Answer> AddAsync(Answer answer);
         Task<List<Answer>> AddAnswersAsync(List<Answer> answers);
+        Task
         Task<Answer> UpdateAsync(int id,Answer answer);
         Task DeleteAsync(int id);
 
