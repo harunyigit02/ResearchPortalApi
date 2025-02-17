@@ -15,7 +15,7 @@ namespace FinalProjectWebApi.Entities.Concrete
 
         public int ParticipantId { get; set; }
 
-        public DateTime ParticipatedAt { get; set; }
+        public DateTime ParticipatedAt { get; set; }= DateTime.UtcNow;
 
 
 

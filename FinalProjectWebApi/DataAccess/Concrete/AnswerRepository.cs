@@ -25,6 +25,8 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         }
         public async Task<List<Answer>> AddAnswersAsync(List<Answer> answers)
         {
+            
+            
             await _context.Set<Answer>().AddRangeAsync(answers);
             await _context.SaveChangesAsync();
             return answers;
