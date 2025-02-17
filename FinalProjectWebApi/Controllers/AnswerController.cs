@@ -67,7 +67,7 @@ namespace FinalProjectWebApi.Controllers
 
             try
             {
-                await _answerService.AddAnswersAsync(answers);
+                await _answerService.AddAnswersAsync(answers,int.Parse(userId));
                 return Ok(answers);
             }
             catch (Exception ex)

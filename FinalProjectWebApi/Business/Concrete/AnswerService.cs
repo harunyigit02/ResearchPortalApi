@@ -17,8 +17,18 @@ namespace FinalProjectWebApi.Business.Concrete
               return await _answerRepository.AddAsync(answer);
              
         }
-        public async Task<List<Answer>> AddAnswersAsync(List<Answer> answers)
+        public async Task<List<Answer>> AddAnswersAsync(List<Answer> answers, int userId)
         {
+
+            foreach (var answer in answers) 
+            {
+                if (userId == null)
+                {
+                    throw new ArgumentNullException(nameof(userId));
+                }
+                answer.ParticipantId = userId;
+
+            }
             if (answers == null || answers.Count == 0)
             {
                 throw new ArgumentException("Answer list cannot be null or empty.");
