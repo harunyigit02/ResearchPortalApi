@@ -72,8 +72,19 @@ namespace FinalProjectWebApi.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Veri kaydetme işlemi başarısız oldu: {ex.Message}");
+                return StatusCode(500, $"Data record failed: {ex.Message}");
             }
+        }
+
+        [HttpGet("{researchId}/Answers")]
+        public async Task<IActionResult> GetAnswersGroupByUsers(int researchId)
+        {
+            var answers = await _answerService.GetAnswersGroupByUsersAsync(researchId);
+            if (answers == null || !answers.Any())  // Eğer cevap yoksa
+            {
+                return NotFound("No Answers Found");
+            }
+            return Ok(answers);  // Başarılı yanıt olarak döndür
         }
 
 

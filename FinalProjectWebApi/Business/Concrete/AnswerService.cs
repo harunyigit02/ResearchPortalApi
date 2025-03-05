@@ -1,6 +1,7 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.DataAccess.Abstract;
 using FinalProjectWebApi.DataAccess.Concrete;
+using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 
 namespace FinalProjectWebApi.Business.Concrete
@@ -57,6 +58,11 @@ namespace FinalProjectWebApi.Business.Concrete
         public Task<List<Answer>> GetAnswersAsync()
         {
             return _answerRepository.GetAllAsync();
+        }
+
+        public async Task<List<UserAnswerDto>> GetAnswersGroupByUsersAsync(int researchId)
+        {
+            return await _answerRepository.GetAnswersGroupByUsersAsync(researchId);
         }
 
         public async Task<Answer> UpdateAnswerAsync(int id, Answer answer)
