@@ -64,6 +64,7 @@ namespace FinalProjectWebApi.Controllers
             {
                 return BadRequest("Geçersiz veri.");
             }
+            
 
             try
             {
