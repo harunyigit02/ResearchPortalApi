@@ -60,7 +60,7 @@ namespace FinalProjectWebApi.Business.Concrete
             return _answerRepository.GetAllAsync();
         }
 
-        public async Task<List<UserAnswerDto>> GetAnswersGroupByUsersAsync(int researchId)
+        public async Task<List<ResearchAnswerDto>> GetAnswersGroupByUsersAsync(int researchId)
         {
             return await _answerRepository.GetAnswersGroupByUsersAsync(researchId);
         }

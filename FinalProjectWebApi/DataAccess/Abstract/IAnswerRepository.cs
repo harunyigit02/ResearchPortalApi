@@ -7,7 +7,7 @@ namespace FinalProjectWebApi.DataAccess.Abstract
     {
         Task<List<Answer>> GetAllAsync();
         Task<Answer> GetByIdAsync(int id);
-        Task<List<UserAnswerDto>> GetAnswersGroupByUsersAsync(int researchId);
+        Task<List<ResearchAnswerDto>> GetAnswersGroupByUsersAsync(int researchId);
 
 
         Task<Answer> AddAsync(Answer answer);

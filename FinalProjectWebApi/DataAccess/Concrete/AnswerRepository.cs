@@ -85,22 +85,37 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             
         }
 
-        public async Task<List<UserAnswerDto>> GetAnswersGroupByUsersAsync(int researchId)
+        public async Task<List<ResearchAnswerDto>> GetAnswersGroupByUsersAsync(int researchId)
         {
-            var result = _context.Answers
-                .Include(a => a.Question)
+            var questions = _context.Questions
+       .Where(q => q.ResearchId == researchId)
+       .Include(q => q.Options)
+       .ToList();
+
+            var answers = _context.Answers
+                .Where(a => questions.Select(q => q.Id).Contains(a.QuestionId))
                 .Include(a => a.Option)
-                .Include(a => a.User)
-                .Where(a => a.Question.ResearchId == researchId)
-                .GroupBy(a => a.ParticipantId)
-                .Select(a => new UserAnswerDto
+                .ToList();
+
+            var participants = _context.Users.ToList(); // Katılımcıların listesi
+
+            var result = participants.Select(p => new ResearchAnswerDto
+            {
+                
+                QuestionAnswers = questions.Select(q => new QuestionAnswerDto
                 {
-                    UserId = a.Key,
-                    Answers = a.OrderBy(a => a.ParticipatedAt).ToList()
-                }
-                )
-                .ToListAsync();
-            return await result;
+                    QuestionId = q.Id,
+                    QuestionText = q.QuestionText,
+                    Options = q.Options.Select(o => new OptionDTO
+                    {
+                        QuestionId = o.Id,
+                        OptionText = o.OptionText
+                    }).ToList(),
+                    SelectedOptionId = answers.FirstOrDefault(a => a.ParticipantId == p.Id && a.QuestionId == q.Id)?.OptionId ?? 0, // Seçilen seçenek
+                    ParticipatedAt = answers.FirstOrDefault(a => a.ParticipantId == p.Id && a.QuestionId == q.Id)?.ParticipatedAt ?? DateTime.MinValue // Cevaplanma Zamanı
+                }).ToList()
+            }).ToList();
+            return result;
         }
     }
 }
