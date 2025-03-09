@@ -75,5 +75,10 @@ namespace FinalProjectWebApi.Business.Concrete
             await _answerRepository.UpdateAsync(id,answer);
             return answer;
         }
+
+        public async Task<List<OptionFilterDto>> GetTargetQuestionResultsAsync(int optionId, int questionId)
+        {
+            return await _answerRepository.GetQuestionParticipantPercentage(optionId, questionId);
+        }
     }
 }

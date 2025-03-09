@@ -9,6 +9,7 @@
         MiddleEastern=5,       // Orta Doğulu
         NativeAmerican=6,      // Kızılderili
         PacificIslander=7,     // Pasifik Adalı
-        Other=8
+        Balkan=8,
+        Other=9
     }
 }

@@ -88,6 +88,17 @@ namespace FinalProjectWebApi.Controllers
             return Ok(answers);  // Başarılı yanıt olarak döndür
         }
 
+        [HttpGet("AnalyzeTargetQuestion")]
+        public async Task<IActionResult> GetTargetQuestionAnalyze(int optionId, int questionId)
+        {
+            var result = await _answerService.GetTargetQuestionResultsAsync(optionId, questionId);
+            if(result == null)
+            {
+                return NotFound("No Count Found");
+            }
+            return Ok(result);
+        }
+
 
 
         // PUT api/<CategoryController>/5
