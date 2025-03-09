@@ -8,6 +8,7 @@ namespace FinalProjectWebApi.Business.Abstract
         Task<List<Answer>> GetAnswersAsync();
         Task<Answer> GetAnswerByIdAsync(int id);
         Task<List<ResearchAnswerDto>> GetAnswersGroupByUsersAsync(int researchId);
+        Task<List<OptionFilterDto>> GetTargetQuestionResultsAsync(int optionId, int questionId);
         Task<Answer> AddAnswerAsync(Answer answer);
         Task<List<Answer>> AddAnswersAsync(List<Answer> answers,int userId);
         Task<Answer> UpdateAnswerAsync(int id,Answer answer);

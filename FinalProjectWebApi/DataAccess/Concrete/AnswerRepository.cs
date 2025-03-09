@@ -11,18 +11,18 @@ namespace FinalProjectWebApi.DataAccess.Concrete
 
         private readonly ApplicationDbContext _context;
 
-        public AnswerRepository(ApplicationDbContext context) 
+        public AnswerRepository(ApplicationDbContext context)
         {
             _context = context;
 
         }
         public async Task<Answer> AddAsync(Answer answer)
         {
-             await _context.Answers.AddAsync(answer);
-             await _context.SaveChangesAsync();
-             return answer;
-            
-            
+            await _context.Answers.AddAsync(answer);
+            await _context.SaveChangesAsync();
+            return answer;
+
+
         }
         public async Task<List<Answer>> AddAnswersAsync(List<Answer> answers)
         {
@@ -52,12 +52,12 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         public async Task DeleteAsync(int id)
         {
             var answer = await _context.Answers.FindAsync(id);
-            if (answer != null) 
+            if (answer != null)
             {
                 _context.Answers.Remove(answer);
                 await _context.SaveChangesAsync();
             }
-            
+
         }
 
         public async Task<List<Answer>> GetAllAsync()
@@ -68,54 +68,103 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         public async Task<Answer> GetByIdAsync(int id)
         {
             return await _context.Answers.FindAsync(id);
-            
+
         }
 
-        public async Task<Answer> UpdateAsync(int id,Answer answer)
+        public async Task<Answer> UpdateAsync(int id, Answer answer)
         {
             answer = await _context.Answers.FindAsync(id);
-            if (answer != null) 
+            if (answer != null)
             {
                 _context.Answers.Update(answer);
                 await _context.SaveChangesAsync();
-                
+
             }
             return answer;
-            
-            
+
+
         }
+
 
         public async Task<List<ResearchAnswerDto>> GetAnswersGroupByUsersAsync(int researchId)
         {
-            var questions = _context.Questions
-       .Where(q => q.ResearchId == researchId)
-       .Include(q => q.Options)
-       .ToList();
+            var questions = await _context.Questions
+                .Where(q => q.ResearchId == researchId)
+                .Include(q => q.Options)
+                .ToListAsync();
 
-            var answers = _context.Answers
-                .Where(a => questions.Select(q => q.Id).Contains(a.QuestionId))
+            var questionIds = questions.Select(q => q.Id).ToList();
+
+            var answers = await _context.Answers
+                .Where(a => questionIds.Contains(a.QuestionId))
                 .Include(a => a.Option)
-                .ToList();
+                .ToListAsync(); // Cevapları bellek içine çekiyoruz.
 
-            var participants = _context.Users.ToList(); // Katılımcıların listesi
+            // Sadece cevap vermiş kullanıcıları alıyoruz
+            var participantIds = answers.Select(a => a.ParticipantId).Distinct().ToList();
+            var participants = await _context.Users
+                .Where(u => participantIds.Contains(u.Id)) // Sadece cevabı olan kullanıcıları getiriyoruz
+                .ToListAsync();
 
             var result = participants.Select(p => new ResearchAnswerDto
             {
-                
-                QuestionAnswers = questions.Select(q => new QuestionAnswerDto
-                {
-                    QuestionId = q.Id,
-                    QuestionText = q.QuestionText,
-                    Options = q.Options.Select(o => new OptionDTO
+                QuestionAnswers = questions
+                    .Where(q => answers.Any(a => a.ParticipantId == p.Id && a.QuestionId == q.Id)) // Kullanıcının cevapladığı soruları filtrele
+                    .Select(q =>
                     {
-                        QuestionId = o.Id,
-                        OptionText = o.OptionText
-                    }).ToList(),
-                    SelectedOptionId = answers.FirstOrDefault(a => a.ParticipantId == p.Id && a.QuestionId == q.Id)?.OptionId ?? 0, // Seçilen seçenek
-                    ParticipatedAt = answers.FirstOrDefault(a => a.ParticipantId == p.Id && a.QuestionId == q.Id)?.ParticipatedAt ?? DateTime.MinValue // Cevaplanma Zamanı
-                }).ToList()
+                        var answer = answers.FirstOrDefault(a => a.ParticipantId == p.Id && a.QuestionId == q.Id);
+                        return new QuestionAnswerDto
+                        {
+                            QuestionId = q.Id,
+                            QuestionText = q.QuestionText,
+                            Options = q.Options.Select(o => new OptionDTO
+                            {
+                                OptionId = o.Id,
+                                OptionText = o.OptionText
+                            }).ToList(),
+                            SelectedOptionId = answer?.OptionId ?? 0, // Seçilen cevap
+                            ParticipatedAt = answer?.ParticipatedAt ?? DateTime.MinValue // Cevaplanma zamanı
+                        };
+                    }).ToList()
             }).ToList();
+
             return result;
         }
+
+        public async Task<List<OptionFilterDto>> GetQuestionParticipantPercentage(int optionId, int questionId)
+        {
+            var filterOption = _context.Answers.Where(a => a.OptionId == optionId);
+            var filterUsers = filterOption.Include(a => a.User)
+                .Select(a => a.User);
+            var targetQuestionResponses = _context.Answers
+                .Where(a => a.QuestionId == questionId && filterUsers.Contains(a.User))
+                .GroupBy(a => a.OptionId);
+            var totalResponses =  await _context.Answers.Include(a => a.User)
+                .Where(a => a.QuestionId == questionId && filterUsers.Contains(a.User)).CountAsync();
+
+            var result = targetQuestionResponses
+                .Select(g => new OptionFilterDto
+            {
+                QuestionId = questionId,
+                OptionId = g.Key,
+                Count = g.Count(),
+                Percentage = totalResponses == 0 ? "0%" : $"{(g.Count() * 100.0 / totalResponses):0.##}%"
+
+            }).ToListAsync();
+
+            return await result;
+
+
+
+
+
+
+
+
+        }
+
+
+                
+
     }
 }
