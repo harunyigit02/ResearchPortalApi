@@ -85,7 +85,7 @@ namespace FinalProjectWebApi.Controllers
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
             if (userId == null)
             {
-                return Unauthorized("Geçersiz kullanıcı");
+                return Unauthorized("Invalid User");
             }
             if (role == "Admin" && role == "Researcher")
             {
