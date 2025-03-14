@@ -51,9 +51,47 @@ namespace FinalProjectWebApi.Business.Concrete
             return await _researchRequirementRepository.GetMatchingResearchesAsync(participant, pageNumber, pageSize, keyword,categoryId,minDate,maxDate);
         }
 
-        public Task<ResearchRequirement> UpdateResearchRequirementAsync(ResearchRequirement resreq)
+        public async Task<ResearchRequirement> UpdateResearchRequirementAsync(int researchId,ResearchRequirement researchRequirement)
         {
-            throw new NotImplementedException();
+            // İş kuralı ve atamalar burada yapılır
+            if (researchRequirement.MinAge < 0 || researchRequirement.MaxAge < 0)
+            {
+                throw new ArgumentException("Age cannot be negative");
+            }
+
+            // MinAge, MaxAge'nin altında olmamalıdır (örnek bir iş kuralı)
+            if (researchRequirement.MinAge > researchRequirement.MaxAge)
+            {
+                throw new ArgumentException("MinAge cannot be greater than MaxAge");
+            }
+
+            // Veritabanında mevcut kaydı alalım
+            var existingRequirement = await _researchRequirementRepository.GetByResearchId(researchId);
+
+            if (existingRequirement == null)
+            {
+                throw new ArgumentException("ResearchRequirement not found");
+            }
+
+            // Atamaları burada yapıyoruz
+            
+            existingRequirement.MinAge = researchRequirement.MinAge;
+            existingRequirement.MaxAge = researchRequirement.MaxAge;
+            existingRequirement.Gender = researchRequirement.Gender;
+            existingRequirement.Location = researchRequirement.Location;
+            existingRequirement.EducationLevel = researchRequirement.EducationLevel;
+            existingRequirement.Occupation = researchRequirement.Occupation;
+            existingRequirement.Ethnicity = researchRequirement.Ethnicity;
+            existingRequirement.MaritalStatus = researchRequirement.MaritalStatus;
+            existingRequirement.ParentalStatus = researchRequirement.ParentalStatus;
+            existingRequirement.ChildStatus = researchRequirement.ChildStatus;
+            existingRequirement.DisabilityStatus = researchRequirement.DisabilityStatus;
+            existingRequirement.HousingType = researchRequirement.HousingType;
+
+            // Güncelleme işlemi repository katmanına yapılır
+            await _researchRequirementRepository.UpdateAsync(existingRequirement);
+
+            return existingRequirement;
         }
     }
 }

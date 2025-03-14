@@ -82,7 +82,6 @@ namespace FinalProjectWebApi.Business.Concrete
             existingResearch.Title = research.Title;
             existingResearch.Description = research.Description;
             existingResearch.CategoryId = research.CategoryId;
-            existingResearch.IsCompleted = research.IsCompleted;
             existingResearch.IsFaceToFace = research.IsFaceToFace;
 
 
