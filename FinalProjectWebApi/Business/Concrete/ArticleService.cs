@@ -90,9 +90,24 @@ namespace FinalProjectWebApi.Business.Concrete
             };
         }
 
-        public Task<Article> UpdateArticleAsync(Article article)
+        public async Task<bool> UpdateArticleAsync(int id, Article updatedArticle)
         {
-            throw new NotImplementedException();
+            var existingArticle = await _articleRepository.GetByIdAsync(id);
+            if (existingArticle == null)
+            {
+                return false; // Makale bulunamadı
+            }
+
+            // Güncellenebilir alanları belirle
+            existingArticle.Title = updatedArticle.Title;
+            existingArticle.CategoryId = updatedArticle.CategoryId;
+            existingArticle.Description = updatedArticle.Description;
+            existingArticle.Title = updatedArticle.Title;
+            existingArticle.Content = updatedArticle.Content;
+            
+
+            await _articleRepository.UpdateAsync(existingArticle);
+            return true;
         }
         public async Task<PagingResult<ArticleDto>> GetArticlesPagedAsync(int pageNumber, int pageSize,int? categoryId,string? keyword,DateTime? minDate,DateTime? maxDate)
         {
