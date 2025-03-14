@@ -7,5 +7,6 @@
         İzmir=3,
         Adana=4,
         Sakarya=5,
+        Konya=6,
     }
 }
