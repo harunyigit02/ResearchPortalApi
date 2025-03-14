@@ -16,7 +16,7 @@ namespace FinalProjectWebApi.Business.Abstract
     DateTime? minDate,
     DateTime? maxDate);
         Task<ResearchRequirement> AddResearchRequirementAsync(ResearchRequirement researchRequirement);
-        Task<ResearchRequirement> UpdateResearchRequirementAsync(ResearchRequirement resreq);
+        Task<ResearchRequirement> UpdateResearchRequirementAsync(int researchId, ResearchRequirement researchRequirement);
         Task DeleteResearchRequirementAsync(int id);
     }
 }

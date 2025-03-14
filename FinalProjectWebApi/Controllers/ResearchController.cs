@@ -118,10 +118,7 @@ namespace FinalProjectWebApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateResearch(int id, [FromBody] Research research)
         {
-            if (id != research.Id)
-            {
-                return BadRequest("Research ID mismatch");
-            }
+            
 
             try
             {
