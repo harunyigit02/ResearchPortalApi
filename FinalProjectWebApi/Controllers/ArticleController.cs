@@ -102,8 +102,21 @@ namespace FinalProjectWebApi.Controllers
 
         // PUT api/<ArticleController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Update(int id, [FromBody] Article updatedArticle)
         {
+            if (updatedArticle == null || id <= 0)
+            {
+                return BadRequest("Geçersiz veri.");
+            }
+
+            var result = await _articleService.UpdateArticleAsync(id, updatedArticle);
+
+            if (!result)
+            {
+                return NotFound("Makale bulunamadı.");
+            }
+
+            return Ok("Makale başarıyla güncellendi.");
         }
 
         // DELETE api/<ArticleController>/5
