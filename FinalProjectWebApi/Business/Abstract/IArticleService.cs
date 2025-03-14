@@ -11,7 +11,7 @@ namespace FinalProjectWebApi.Business.Abstract
         Task<PagingResult<ArticleDto>> GetArticlesByUserIdAsync(int userId, int pageNumber, int pageSize, int? categoryId, string? keyword, DateTime? minDate, DateTime? maxDate);
         Task<Article> GetArticleByIdAsync(int id);
         Task<Article> AddArticleAsync(Article article);
-        Task<Article>UpdateArticleAsync(Article article);
+        Task<bool> UpdateArticleAsync(int id, Article updatedArticle);
         Task<Article>DeleteArticleAsync(int id);
         Task<bool> DeleteArticlesAsync(List<int> articleIds);
 

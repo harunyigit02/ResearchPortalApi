@@ -109,9 +109,10 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             };
         }
 
-        public async Task UpdateAsync( Article article)
+        public async Task UpdateAsync(Article article)
         {
-            
+            _context.Articles.Update(article);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<PagingResult<Article>> GetArticlesPagedAsync(int pageNumber, int pageSize,int? categoryId,string? keyword,DateTime? minDate, DateTime? maxDate)
