@@ -13,6 +13,7 @@ namespace FinalProjectWebApi.Business.Abstract
         Task<Article> AddArticleAsync(Article article);
         Task<Article>UpdateArticleAsync(Article article);
         Task<Article>DeleteArticleAsync(int id);
+        Task<bool> DeleteArticlesAsync(List<int> articleIds);
 
     }
 }

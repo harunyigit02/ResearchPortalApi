@@ -12,5 +12,6 @@ namespace FinalProjectWebApi.DataAccess.Abstract
         Task<Article> AddAsync(Article article);
         Task UpdateAsync( Article article);
         Task DeleteAsync(int id);
+        Task<bool> DeleteArticlesAsync(List<int> articleIds);
     }
 }

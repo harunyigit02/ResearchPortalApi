@@ -47,6 +47,20 @@ namespace FinalProjectWebApi.Business.Concrete
             // 3. İşlem başarılı ise true döndürüyoruz
             return article;
         }
+        public async Task<bool> DeleteArticlesAsync(List<int> articleIds)
+        {
+            try
+            {
+                // Repository'den silme işlemini çağırıyoruz
+                return await _articleRepository.DeleteArticlesAsync(articleIds);
+            }
+            catch (Exception ex)
+            {
+                // Hata durumunda loglama veya başka bir işlem yapılabilir
+                Console.WriteLine($"Hata oluştu: {ex.Message}");
+                return false;
+            }
+        }
 
 
         public async Task<Article> GetArticleByIdAsync(int id)
