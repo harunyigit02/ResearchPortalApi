@@ -122,7 +122,28 @@ namespace FinalProjectWebApi.Controllers
             // Silme işlemi başarılı ise 200 OK ve silinen makale bilgisi döndürüyoruz
             return Ok(new { Message = "Article deleted successfully.", Article = deletedArticle });
         }
+        [HttpDelete("MultiDelete")]
+        public async Task<IActionResult> DeleteArticles([FromBody] List<int> articleIds)
+        {
+            if (articleIds == null || !articleIds.Any())
+            {
+                return BadRequest("Silinecek makale ID'leri geçerli değil.");
+            }
 
-        
+            var result = await _articleService.DeleteArticlesAsync(articleIds);
+
+            if (result)
+            {
+                return Ok("Makaleler başarıyla silindi.");
+            }
+            else
+            {
+                return StatusCode(500, "Makaleler silinirken bir hata oluştu.");
+            }
+        }
+
+
+
+
     }
 }
