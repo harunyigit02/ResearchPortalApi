@@ -131,9 +131,11 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         }
 
 
-        public Task UpdateAsync(ResearchRequirement researchRequirement)
+        public async Task UpdateAsync(ResearchRequirement researchRequirement)
         {
-            throw new NotImplementedException();
+
+            _context.ResearchRequirements.Update(researchRequirement);
+            await _context.SaveChangesAsync();
         }
     }
 }
