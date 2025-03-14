@@ -136,8 +136,17 @@ namespace FinalProjectWebApi.Controllers
 
         // DELETE api/<ResearchController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            try
+            {
+                await _researchService.DeleteResearchAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }
