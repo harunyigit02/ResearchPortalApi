@@ -118,10 +118,7 @@ namespace FinalProjectWebApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateResearch(int id, [FromBody] Research research)
         {
-            if (id != research.Id)
-            {
-                return BadRequest("Research ID mismatch");
-            }
+            
 
             try
             {
@@ -136,8 +133,17 @@ namespace FinalProjectWebApi.Controllers
 
         // DELETE api/<ResearchController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            try
+            {
+                await _researchService.DeleteResearchAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

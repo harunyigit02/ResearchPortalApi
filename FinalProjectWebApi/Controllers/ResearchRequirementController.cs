@@ -87,8 +87,17 @@ namespace FinalProjectWebApi.Controllers
 
         // PUT api/<ResearchRequirementController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> UpdateResearchRequirementAsync(int id, [FromBody] ResearchRequirement researchRequirement)
         {
+           
+
+            var updatedResearchRequirement = await _researchRequirementService.UpdateResearchRequirementAsync(id,researchRequirement);
+            if (updatedResearchRequirement == null)
+            {
+                return NotFound($"ResearchRequirement with ID {id} not found.");
+            }
+
+            return Ok(updatedResearchRequirement);
         }
 
         // DELETE api/<ResearchRequirementController>/5

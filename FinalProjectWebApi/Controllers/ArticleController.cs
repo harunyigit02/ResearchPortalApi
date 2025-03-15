@@ -102,8 +102,21 @@ namespace FinalProjectWebApi.Controllers
 
         // PUT api/<ArticleController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Update(int id, [FromBody] Article updatedArticle)
         {
+            if (updatedArticle == null || id <= 0)
+            {
+                return BadRequest("Geçersiz veri.");
+            }
+
+            var result = await _articleService.UpdateArticleAsync(id, updatedArticle);
+
+            if (!result)
+            {
+                return NotFound("Makale bulunamadı.");
+            }
+
+            return Ok("Makale başarıyla güncellendi.");
         }
 
         // DELETE api/<ArticleController>/5
@@ -122,7 +135,28 @@ namespace FinalProjectWebApi.Controllers
             // Silme işlemi başarılı ise 200 OK ve silinen makale bilgisi döndürüyoruz
             return Ok(new { Message = "Article deleted successfully.", Article = deletedArticle });
         }
+        [HttpDelete("MultiDelete")]
+        public async Task<IActionResult> DeleteArticles([FromBody] List<int> articleIds)
+        {
+            if (articleIds == null || !articleIds.Any())
+            {
+                return BadRequest("Silinecek makale ID'leri geçerli değil.");
+            }
 
-        
+            var result = await _articleService.DeleteArticlesAsync(articleIds);
+
+            if (result)
+            {
+                return Ok("Makaleler başarıyla silindi.");
+            }
+            else
+            {
+                return StatusCode(500, "Makaleler silinirken bir hata oluştu.");
+            }
+        }
+
+
+
+
     }
 }

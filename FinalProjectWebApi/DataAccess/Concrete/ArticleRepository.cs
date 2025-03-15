@@ -34,6 +34,33 @@ namespace FinalProjectWebApi.DataAccess.Concrete
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<bool> DeleteArticlesAsync(List<int> articleIds)
+        {
+            // Silinecek makaleleri veritabanından alıyoruz
+            var articlesToDelete = await _context.Articles
+                .Where(a => articleIds.Contains(a.Id))
+                .ToListAsync();
+
+            if (articlesToDelete.Count == 0)
+            {
+                return false; // Eğer silinecek makale yoksa false döner
+            }
+
+            // Toplu silme işlemi
+            _context.Articles.RemoveRange(articlesToDelete);
+
+            try
+            {
+                // Değişiklikleri veritabanına kaydediyoruz
+                await _context.SaveChangesAsync();
+                return true; // Silme başarılı oldu
+            }
+            catch (Exception)
+            {
+                // Hata durumunda true dönmez
+                return false;
+            }
+        }
 
         public async Task<IQueryable<Article>> GetAllAsync()
         {
@@ -82,9 +109,10 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             };
         }
 
-        public async Task UpdateAsync( Article article)
+        public async Task UpdateAsync(Article article)
         {
-            
+            _context.Articles.Update(article);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<PagingResult<Article>> GetArticlesPagedAsync(int pageNumber, int pageSize,int? categoryId,string? keyword,DateTime? minDate, DateTime? maxDate)
@@ -114,8 +142,8 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             var totalItems = await query.CountAsync();
 
             var articles = await query
-                .Skip((pageNumber - 1) * pageSize)  // Atlanacak öğe sayısı
-                .Take(pageSize)                    // Alınacak öğe sayısı
+                .Skip((pageNumber - 1) * pageSize)  
+                .Take(pageSize)
                 .ToListAsync();
 
             return new PagingResult<Article>
@@ -126,5 +154,8 @@ namespace FinalProjectWebApi.DataAccess.Concrete
                 PageSize = pageSize
             };
         }
+
+
+       
     }
 }
