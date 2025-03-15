@@ -45,7 +45,15 @@ namespace FinalProjectWebApi.DataAccess.Concrete
 
         public async Task UpdateAsync(Question question)
         {
+            _context.Questions.Update(question);
+            await _context.SaveChangesAsync();
+        }
 
+        public async Task<List<Question>> GetByResearchIdAsync(int researchId)
+        {
+            return await _context.Questions
+                .Where(q => q.ResearchId == researchId)
+                .ToListAsync();
         }
     }
 }
