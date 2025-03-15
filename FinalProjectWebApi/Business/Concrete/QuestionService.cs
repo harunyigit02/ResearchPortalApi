@@ -59,10 +59,30 @@ namespace FinalProjectWebApi.Business.Concrete
         {
             return await _questionRepository.GetAllAsync();
         }
-
-        public Task<Question> UpdateQuestionAsync(Question question)
+        public async Task<List<Question>> GetQuestionsByResearchIdAsync(int researchId)
         {
-            throw new NotImplementedException();
+            return await _questionRepository.GetByResearchIdAsync(researchId);
+        }
+
+
+        public async Task<Question> UpdateQuestionAsync(int id,Question question)
+        {
+            var existingquestion = await _questionRepository.GetByIdAsync(id);
+            if (existingquestion == null)
+            {
+                throw new ArgumentException("Question not found");
+            }
+
+            existingquestion.QuestionText = question.QuestionText;
+            existingquestion.Options = question.Options;
+            
+            await _questionRepository.UpdateAsync(existingquestion);
+            return existingquestion;
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            await _questionRepository.DeleteAsync(id);
         }
     }
 }

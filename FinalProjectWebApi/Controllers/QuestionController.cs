@@ -40,6 +40,17 @@ namespace FinalProjectWebApi.Controllers
             return Ok(question); // 200 OK HTTP response
         }
 
+        [HttpGet("ByResearch/{researchId}")]
+        public async Task<ActionResult<Question>> GetQuestionByResearchId(int researchId)
+        {
+            var question = await _questionService.GetQuestionsByResearchIdAsync(researchId);
+           
+            return Ok(question); // 200 OK HTTP response
+        }
+
+
+
+
         // POST api/<CategoryController>
         // POST api/<ArticleController>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Researcher")]
@@ -68,8 +79,17 @@ namespace FinalProjectWebApi.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Update(int id, [FromBody] Question question)
         {
+            var updatedQuestion = await _questionService.UpdateQuestionAsync(id, question);
+            if (updatedQuestion == null)
+            {
+                return NotFound(new { Message = $"Question with ID {id} not found." });
+            }
+
+
+
+            return Ok(new { Message = "Question updated successfully.", Question = updatedQuestion });
         }
 
         // DELETE api/<CategoryController>/5
