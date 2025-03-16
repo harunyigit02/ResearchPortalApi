@@ -10,5 +10,7 @@ namespace FinalProjectWebApi.Business.Abstract
         Task VerifyEmail(string email, string verificationCode);
         Task<PagingResult<UserManageDto>> GetUsersAsync(int pageNumber, int pageSize, string? roleFilter, string? keyword);
         Task UpdateUserRoleAsync(int userId, string newRole);
+        Task<UserManageDto> GetUserByUserIdAsync(int userId);
+
     }
 }
