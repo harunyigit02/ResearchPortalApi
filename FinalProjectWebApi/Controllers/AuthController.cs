@@ -61,9 +61,9 @@ namespace FinalProjectWebApi.Controllers
         }
 
         [HttpGet("Users")]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers(int pageNumber, int pageSize, string? roleFilter, string? keyword)
         {
-            var users= await _authService.GetUsersAsync();
+            var users= await _authService.GetUsersAsync(pageNumber, pageSize, roleFilter, keyword);
             return Ok(users);
         }
 
