@@ -1,5 +1,6 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.Entities.Abstract;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -65,6 +66,19 @@ namespace FinalProjectWebApi.Controllers
         {
             var users= await _authService.GetUsersAsync(pageNumber, pageSize, roleFilter, keyword);
             return Ok(users);
+        }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("User")]
+
+        public async Task<IActionResult> GetUserById()
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (userId == null)
+            {
+                return Unauthorized("Unauthorized");
+            }
+            var user = _authService.GetUserByUserIdAsync(userId);
+            return Ok(user);
         }
 
         [Authorize(Roles = "Admin")]
