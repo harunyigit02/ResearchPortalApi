@@ -1,5 +1,6 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.DataAccess.Abstract;
+using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -139,9 +140,27 @@ namespace FinalProjectWebApi.Business.Concrete
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<List<User>> GetUsersAsync()
+        public async Task<PagingResult<UserManageDto>> GetUsersAsync(int pageNumber, int pageSize, string? roleFilter, string? keyword)
         {
-             return await _authRepository.GetAllAsync();
+            // Sayfalama, arama ve filtreleme işlemlerini gerçekleştiren metoda çağrı yapıyoruz.
+            var result = await _authRepository.GetUsersPagedAsync(pageNumber, pageSize, roleFilter, keyword);
+
+            // DTO dönüşümü
+            var userDtos = result.Items.Select(x => new UserManageDto
+            {
+                Id = x.Id,
+                Email = x.Email,
+                Role = x.Role,
+            }).ToList();
+
+            // PagingResult dönüyoruz
+            return new PagingResult<UserManageDto>
+            {
+                Items = userDtos,
+                TotalItems = result.TotalItems,
+                PageNumber = result.PageNumber,
+                PageSize = result.PageSize
+            };
         }
 
         public async Task UpdateUserRoleAsync(int userId, string newRole)
