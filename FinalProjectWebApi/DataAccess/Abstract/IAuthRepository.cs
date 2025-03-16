@@ -1,10 +1,11 @@
-﻿using FinalProjectWebApi.Entities.Concrete;
+﻿using FinalProjectWebApi.Entities.Abstract;
+using FinalProjectWebApi.Entities.Concrete;
 
 namespace FinalProjectWebApi.DataAccess.Abstract
 {
     public interface IAuthRepository
     {
-        Task<List<User>> GetAllAsync();
+        Task<PagingResult<UserManageDto>> GetUsersPagedAsync(int pageNumber, int pageSize, string? roleFilter, string? keyword);
         Task<User> GetByIdAsync(int id);
         Task<User> GetUserByUserName(string username);
         Task AddUser(User user);
