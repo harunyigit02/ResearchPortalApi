@@ -53,6 +53,7 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         {
             return await _context.Questions
                 .Where(q => q.ResearchId == researchId)
+                .Include(q => q.Options)
                 .ToListAsync();
         }
     }
