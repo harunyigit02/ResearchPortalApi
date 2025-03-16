@@ -28,7 +28,7 @@ namespace FinalProjectWebApi.Business.Concrete
         public async Task Register(string email, string password)
         {
             // Kullanıcı zaten var mı kontrol et
-            if (await _temporaryUserRepository.GetUserByUserName(email) != null && await _authRepository.GetUserByUserName(email)!=null)
+            if (await _temporaryUserRepository.GetUserByUserName(email) != null && await _authRepository.GetUserByUserName(email) != null)
             {
                 throw new Exception("Kullanıcı zaten kayıtlı.");
             }
@@ -176,6 +176,29 @@ namespace FinalProjectWebApi.Business.Concrete
             await _authRepository.UpdateAsync(user); // Veritabanında güncelleme
         }
 
-    }
+        public async Task<UserManageDto> GetUserByUserIdAsync(int userId)
+        {
+            var user = await _authRepository.GetByIdAsync(userId); // await ekledik
 
+            // Eğer kullanıcı bulunamazsa, uygun bir değer döndürmek için null kontrolü ekliyoruz
+            if (user == null)
+            {
+                // Burada null döndürebilir veya bir hata fırlatabilirsiniz.
+                // Örneğin:
+                throw new Exception("User not found");
+            }
+
+            return new UserManageDto
+            {
+                Id = user.Id,         // user nesnesinden Id alıyoruz
+                Email = user.Email,   // user nesnesinden Email alıyoruz
+                Role = user.Role,     // user nesnesinden Role alıyoruz
+            };
+
+
+
+
+        }
+    }
 }
+
