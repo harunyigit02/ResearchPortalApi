@@ -62,22 +62,34 @@ namespace FinalProjectWebApi.Controllers
         }
 
         [HttpGet("Users")]
-        public async Task<IActionResult> GetUsers(int pageNumber, int pageSize, string? roleFilter, string? keyword)
+        public async Task<IActionResult> GetUsers(int pageNumber, int pageSize, string? role, string? keyword, DateTime? minDate, DateTime? maxDate)
         {
-            var users= await _authService.GetUsersAsync(pageNumber, pageSize, roleFilter, keyword);
+            var users= await _authService.GetUsersAsync(pageNumber, pageSize, role, keyword, minDate, maxDate);
             return Ok(users);
         }
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("User")]
-
         public async Task<IActionResult> GetUserById()
         {
+            // Kullanıcı ID'sini JWT token'dan alıyoruz
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            // Eğer kullanıcı ID'si alınamazsa, unauthorized döndürüyoruz
             if (userId == null)
             {
                 return Unauthorized("Unauthorized");
             }
-            var user = _authService.GetUserByUserIdAsync(userId);
+
+            // Asenkron metodu doğru şekilde beklemek için 'await' ekliyoruz
+            var user = await _authService.GetUserByUserIdAsync(userId);
+
+            // Eğer kullanıcı bulunamazsa, 404 döndürüyoruz
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            // Kullanıcıyı başarılı şekilde döndürüyoruz
             return Ok(user);
         }
 
