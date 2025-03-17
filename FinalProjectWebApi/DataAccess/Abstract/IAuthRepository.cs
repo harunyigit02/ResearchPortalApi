@@ -5,7 +5,7 @@ namespace FinalProjectWebApi.DataAccess.Abstract
 {
     public interface IAuthRepository
     {
-        Task<PagingResult<UserManageDto>> GetUsersPagedAsync(int pageNumber, int pageSize, string? roleFilter, string? keyword);
+        Task<PagingResult<UserManageDto>> GetUsersPagedAsync(int pageNumber, int pageSize, string? roleFilter, string? keyword, DateTime? minDate, DateTime? maxDate);
         Task<User> GetByIdAsync(int id);
         Task<User> GetUserByUserName(string username);
         Task AddUser(User user);

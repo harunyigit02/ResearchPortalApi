@@ -14,7 +14,7 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         {
             _context = context;
         }
-        public async Task<PagingResult<UserManageDto>> GetUsersPagedAsync(int pageNumber, int pageSize, string? roleFilter, string? keyword)
+        public async Task<PagingResult<UserManageDto>> GetUsersPagedAsync(int pageNumber, int pageSize, string? roleFilter, string? keyword, DateTime? minDate, DateTime? maxDate)
         {
             var query = _context.Users.AsQueryable();
 
@@ -29,6 +29,16 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             {
                 var loweredKeyword = keyword.ToLower();
                 query = query.Where(u => u.Email.ToLower().Contains(loweredKeyword) || u.Role.ToLower().Contains(loweredKeyword));
+            }
+            if (minDate.HasValue)
+            {
+                minDate = DateTime.SpecifyKind(minDate.Value, DateTimeKind.Utc);
+                query = query.Where(r => r.CreatedAt > minDate.Value);
+            }
+            if (maxDate.HasValue)
+            {
+                maxDate = DateTime.SpecifyKind(maxDate.Value, DateTimeKind.Utc);
+                query = query.Where(r => r.CreatedAt < maxDate.Value);
             }
 
             // Toplam öğe sayısı (sayfalama için)
