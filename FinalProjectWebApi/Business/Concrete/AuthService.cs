@@ -140,10 +140,10 @@ namespace FinalProjectWebApi.Business.Concrete
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<PagingResult<UserManageDto>> GetUsersAsync(int pageNumber, int pageSize, string? roleFilter, string? keyword)
+        public async Task<PagingResult<UserManageDto>> GetUsersAsync(int pageNumber, int pageSize, string? roleFilter, string? keyword, DateTime? minDate, DateTime? maxDate)
         {
             // Sayfalama, arama ve filtreleme işlemlerini gerçekleştiren metoda çağrı yapıyoruz.
-            var result = await _authRepository.GetUsersPagedAsync(pageNumber, pageSize, roleFilter, keyword);
+            var result = await _authRepository.GetUsersPagedAsync(pageNumber, pageSize, roleFilter, keyword,minDate,maxDate);
 
             // DTO dönüşümü
             var userDtos = result.Items.Select(x => new UserManageDto
