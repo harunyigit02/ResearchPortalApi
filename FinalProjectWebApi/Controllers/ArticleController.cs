@@ -78,11 +78,26 @@ namespace FinalProjectWebApi.Controllers
         // POST api/<ArticleController>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Researcher")]  // Sadece doğrulanmış kullanıcıların erişebilmesi için
         [HttpPost]
-        public async Task<ActionResult<Article>> AddArticle(Article article)
+        public async Task<ActionResult<Article>> AddArticle( [FromForm] IFormFile file, [FromForm] Article article)
         {
             // Kullanıcıyı kimlik doğrulama token'ından alıyoruz
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // JWT token'dan userId alıyoruz
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (file == null || file.Length == 0)
+                return BadRequest("PDF dosyası eksik.");
+
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+
+            article.Content = memoryStream.ToArray();
+            if (article.Content == null)
+            {
+                return BadRequest("Pdf dosyasi yüklenemedi");
+            }
+                
+
+
             if (userId == null)
             {
                 return Unauthorized("Invalid User");
