@@ -115,6 +115,24 @@ namespace FinalProjectWebApi.Controllers
         }
 
 
+        [HttpGet("{id}/Download")]
+        public async Task<IActionResult> DownloadArticle(int id)
+        {
+            var article = await _articleService.GetArticleByIdAsync(id);
+
+            if (article == null)
+                return NotFound("Makale bulunamadı.");
+
+            if (article.Content == null || article.Content.Length == 0)
+                return NotFound("Makalenin içeriği boş.");
+
+            // Dosya adını makale başlığından oluştur (boşsa fallback)
+            var fileName = $"{article.Title?.Replace(" ", "_") ?? "Makale"}_{id}.pdf";
+
+            return File(article.Content, "application/pdf", fileName);
+        }
+
+
         // PUT api/<ArticleController>/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Article updatedArticle)
