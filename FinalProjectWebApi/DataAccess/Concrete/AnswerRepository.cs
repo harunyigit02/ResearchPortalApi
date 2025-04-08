@@ -207,6 +207,38 @@ namespace FinalProjectWebApi.DataAccess.Concrete
         }
 
 
+        public async Task<List<OptionFilterDto>> GetQuestionParticipantPercentage2(List<int> optionIds, int questionId)
+        {
+            // Seçeneklere göre kullanıcıları filtrele
+            var filterUsers = await _context.Answers
+                .Where(a => optionIds.Contains(a.OptionId))
+                .Select(a => a.User)
+                .Distinct()
+                .ToListAsync();
+
+            // Şimdi bu kullanıcıların ilgili soruya verdikleri cevapları gruplandır
+            var targetQuestionResponses = _context.Answers
+                .Where(a => a.QuestionId == questionId && filterUsers.Contains(a.User)) // Bu artık bellekte çalışacak
+                .GroupBy(a => a.OptionId);
+
+            var totalResponses = await _context.Answers
+                .Where(a => a.QuestionId == questionId && filterUsers.Contains(a.User))
+                .CountAsync();
+
+            var result = await targetQuestionResponses
+                .Select(g => new OptionFilterDto
+                {
+                    QuestionId = questionId,
+                    OptionId = g.Key,
+                    Count = g.Count(),
+                    Percentage = totalResponses == 0 ? "0%" : $"{(g.Count() * 100.0 / totalResponses):0.##}%"
+                })
+                .ToListAsync();
+
+            return result;
+        }
+
+
 
 
 

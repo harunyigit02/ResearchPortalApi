@@ -99,7 +99,7 @@ namespace FinalProjectWebApi.Controllers
             }
             return Ok(result);
         }
-        [HttpPost("AnalyzeAllQuestions")]
+        [HttpPost("AnalyzeAllQuestions/{researchId}")]
         public async Task<IActionResult> GetAllQuestionsAnalyze([FromBody] List<int> optionIds,int researchId)
         {
             var result = await _answerService.GetAllQuestionResultsAsync(optionIds,researchId);
