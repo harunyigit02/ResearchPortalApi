@@ -14,7 +14,7 @@ namespace FinalProjectWebApi.Entities.Concrete
         public int CategoryId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public byte[] Content { get; set; }
+        public byte[]? Content { get; set; }
         public int PublishedBy { get; set; }
         public DateTime PublishedAt { get; set; }
         public int TotalViews { get; set; }
