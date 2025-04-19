@@ -2,6 +2,7 @@
 using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System.Runtime.CompilerServices;
 
 namespace FinalProjectWebApi.DataAccess.Concrete
@@ -131,40 +132,118 @@ namespace FinalProjectWebApi.DataAccess.Concrete
             return result;
         }
 
-        public async Task<List<OptionFilterDto>> GetQuestionParticipantPercentage(int optionId, int questionId)
+        public async Task<List<OptionFilterDto>> GetQuestionParticipantPercentage(List<int> optionIds, int questionId)
         {
-            var filterOption = _context.Answers.Where(a => a.OptionId == optionId);
-            var filterUsers = filterOption.Include(a => a.User)
-                .Select(a => a.User);
+            // Seçeneklere göre kullanıcıları filtrele
+            var filterUsers = await _context.Answers
+                .Where(a => optionIds.Contains(a.OptionId))
+                .Select(a => a.User)
+                .Distinct()
+                .ToListAsync(); 
+
+            // Şimdi bu kullanıcıların ilgili soruya verdikleri cevapları gruplandır
             var targetQuestionResponses = _context.Answers
-                .Where(a => a.QuestionId == questionId && filterUsers.Contains(a.User))
+                .Where(a => a.QuestionId == questionId && filterUsers.Contains(a.User)) // Bu artık bellekte çalışacak
                 .GroupBy(a => a.OptionId);
-            var totalResponses =  await _context.Answers.Include(a => a.User)
-                .Where(a => a.QuestionId == questionId && filterUsers.Contains(a.User)).CountAsync();
 
-            var result = targetQuestionResponses
+            var totalResponses = await _context.Answers
+                .Where(a => a.QuestionId == questionId && filterUsers.Contains(a.User))
+                .CountAsync();
+
+            var result = await targetQuestionResponses
                 .Select(g => new OptionFilterDto
+                {
+                    QuestionId = questionId,
+                    OptionId = g.Key,
+                    Count = g.Count(),
+                    Percentage = totalResponses == 0 ? "0%" : $"{(g.Count() * 100.0 / totalResponses):0.##}%"
+                })
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<List<OptionFilterDto>> GetResearchParticipantPercentage(List<int> optionIds, int researchId)
+        {
+            // 1. Araştırmaya ait tüm soruları al
+            var questions = await _context.Questions
+                .Where(q => q.ResearchId == researchId)  // Araştırma id'ye göre filtrele
+                .ToListAsync();
+            List<OptionFilterDto> allResult = new List<OptionFilterDto>(); 
+            
+
+            foreach (var question in questions) 
             {
-                QuestionId = questionId,
-                OptionId = g.Key,
-                Count = g.Count(),
-                Percentage = totalResponses == 0 ? "0%" : $"{(g.Count() * 100.0 / totalResponses):0.##}%"
+                var filterUsers = await _context.Answers
+               .Where(a => optionIds.Contains(a.OptionId))
+               .Select(a => a.User)
+               .Distinct()
+               .ToListAsync();
 
-            }).ToListAsync();
+                // Şimdi bu kullanıcıların ilgili soruya verdikleri cevapları gruplandır
+                var targetQuestionResponses = _context.Answers
+                    .Where(a => a.QuestionId == question.Id && filterUsers.Contains(a.User)) // Bu artık bellekte çalışacak
+                    .GroupBy(a => a.OptionId);
 
-            return await result;
+                var totalResponses = await _context.Answers
+                    .Where(a => a.QuestionId == question.Id && filterUsers.Contains(a.User))
+                    .CountAsync();
 
+                var result = await targetQuestionResponses
+                    .Select(g => new OptionFilterDto
+                    {
+                        QuestionId = question.Id,
+                        OptionId = g.Key,
+                        Count = g.Count(),
+                        Percentage = totalResponses == 0 ? "0%" : $"{(g.Count() * 100.0 / totalResponses):0.##}%"
+                    })
+                    .ToListAsync();
+                allResult.AddRange(result);
+            }
+            return allResult;
+            
 
-
-
-
-
-
-
+           
         }
 
 
-                
+        public async Task<List<OptionFilterDto>> GetQuestionParticipantPercentage2(List<int> optionIds, int questionId)
+        {
+            // Seçeneklere göre kullanıcıları filtrele
+            var filterUsers = await _context.Answers
+                .Where(a => optionIds.Contains(a.OptionId))
+                .Select(a => a.User)
+                .Distinct()
+                .ToListAsync();
+
+            // Şimdi bu kullanıcıların ilgili soruya verdikleri cevapları gruplandır
+            var targetQuestionResponses = _context.Answers
+                .Where(a => a.QuestionId == questionId && filterUsers.Contains(a.User)) // Bu artık bellekte çalışacak
+                .GroupBy(a => a.OptionId);
+
+            var totalResponses = await _context.Answers
+                .Where(a => a.QuestionId == questionId && filterUsers.Contains(a.User))
+                .CountAsync();
+
+            var result = await targetQuestionResponses
+                .Select(g => new OptionFilterDto
+                {
+                    QuestionId = questionId,
+                    OptionId = g.Key,
+                    Count = g.Count(),
+                    Percentage = totalResponses == 0 ? "0%" : $"{(g.Count() * 100.0 / totalResponses):0.##}%"
+                })
+                .ToListAsync();
+
+            return result;
+        }
+
+
+
+
+
+
+
 
     }
 }

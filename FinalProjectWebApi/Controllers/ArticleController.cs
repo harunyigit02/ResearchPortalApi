@@ -78,11 +78,26 @@ namespace FinalProjectWebApi.Controllers
         // POST api/<ArticleController>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Researcher")]  // Sadece doğrulanmış kullanıcıların erişebilmesi için
         [HttpPost]
-        public async Task<ActionResult<Article>> AddArticle(Article article)
+        public async Task<ActionResult<Article>> AddArticle( [FromForm] IFormFile file, [FromForm] Article article)
         {
             // Kullanıcıyı kimlik doğrulama token'ından alıyoruz
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // JWT token'dan userId alıyoruz
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (file == null || file.Length == 0)
+                return BadRequest("PDF dosyası eksik.");
+
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+
+            article.Content = memoryStream.ToArray();
+            if (article.Content == null)
+            {
+                return BadRequest("Pdf dosyasi yüklenemedi");
+            }
+                
+
+
             if (userId == null)
             {
                 return Unauthorized("Invalid User");
@@ -97,6 +112,24 @@ namespace FinalProjectWebApi.Controllers
 
             var createdArticle = await _articleService.AddArticleAsync(article);
             return CreatedAtAction(nameof(GetArticle), new { id = createdArticle.Id }, createdArticle);
+        }
+
+
+        [HttpGet("{id}/Download")]
+        public async Task<IActionResult> DownloadArticle(int id)
+        {
+            var article = await _articleService.GetArticleByIdAsync(id);
+
+            if (article == null)
+                return NotFound("Makale bulunamadı.");
+
+            if (article.Content == null || article.Content.Length == 0)
+                return NotFound("Makalenin içeriği boş.");
+
+            // Dosya adını makale başlığından oluştur (boşsa fallback)
+            var fileName = $"{article.Title?.Replace(" ", "_") ?? "Makale"}_{id}.pdf";
+
+            return File(article.Content, "application/pdf", fileName);
         }
 
 

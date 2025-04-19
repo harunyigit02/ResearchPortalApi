@@ -1,5 +1,6 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
 using FinalProjectWebApi.DataAccess.Abstract;
+using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -27,7 +28,7 @@ namespace FinalProjectWebApi.Business.Concrete
         public async Task Register(string email, string password)
         {
             // Kullanıcı zaten var mı kontrol et
-            if (await _temporaryUserRepository.GetUserByUserName(email) != null && await _authRepository.GetUserByUserName(email)!=null)
+            if (await _temporaryUserRepository.GetUserByUserName(email) != null && await _authRepository.GetUserByUserName(email) != null)
             {
                 throw new Exception("Kullanıcı zaten kayıtlı.");
             }
@@ -139,9 +140,37 @@ namespace FinalProjectWebApi.Business.Concrete
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<List<User>> GetUsersAsync()
+        private string GenerateRefreshToken()
         {
-             return await _authRepository.GetAllAsync();
+            var randomBytes = new byte[64];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomBytes);
+            }
+            return Convert.ToBase64String(randomBytes);
+        }
+
+        public async Task<PagingResult<UserManageDto>> GetUsersAsync(int pageNumber, int pageSize, string? roleFilter, string? keyword, DateTime? minDate, DateTime? maxDate)
+        {
+            // Sayfalama, arama ve filtreleme işlemlerini gerçekleştiren metoda çağrı yapıyoruz.
+            var result = await _authRepository.GetUsersPagedAsync(pageNumber, pageSize, roleFilter, keyword,minDate,maxDate);
+
+            // DTO dönüşümü
+            var userDtos = result.Items.Select(x => new UserManageDto
+            {
+                Id = x.Id,
+                Email = x.Email,
+                Role = x.Role,
+            }).ToList();
+
+            // PagingResult dönüyoruz
+            return new PagingResult<UserManageDto>
+            {
+                Items = userDtos,
+                TotalItems = result.TotalItems,
+                PageNumber = result.PageNumber,
+                PageSize = result.PageSize
+            };
         }
 
         public async Task UpdateUserRoleAsync(int userId, string newRole)
@@ -157,6 +186,29 @@ namespace FinalProjectWebApi.Business.Concrete
             await _authRepository.UpdateAsync(user); // Veritabanında güncelleme
         }
 
-    }
+        public async Task<UserManageDto> GetUserByUserIdAsync(int userId)
+        {
+            var user = await _authRepository.GetByIdAsync(userId); // await ekledik
 
+            // Eğer kullanıcı bulunamazsa, uygun bir değer döndürmek için null kontrolü ekliyoruz
+            if (user == null)
+            {
+                // Burada null döndürebilir veya bir hata fırlatabilirsiniz.
+                // Örneğin:
+                throw new Exception("User not found");
+            }
+
+            return new UserManageDto
+            {
+                Id = user.Id,         // user nesnesinden Id alıyoruz
+                Email = user.Email,   // user nesnesinden Email alıyoruz
+                Role = user.Role,     // user nesnesinden Role alıyoruz
+            };
+
+
+
+
+        }
+    }
 }
+

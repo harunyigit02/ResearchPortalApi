@@ -83,6 +83,7 @@ namespace FinalProjectWebApi.Business.Concrete
             existingResearch.Description = research.Description;
             existingResearch.CategoryId = research.CategoryId;
             existingResearch.IsFaceToFace = research.IsFaceToFace;
+            existingResearch.IsCompleted = research.IsCompleted;
 
 
             // Repository üzerinden güncelleme işlemini yap

@@ -76,9 +76,13 @@ namespace FinalProjectWebApi.Business.Concrete
             return answer;
         }
 
-        public async Task<List<OptionFilterDto>> GetTargetQuestionResultsAsync(int optionId, int questionId)
+        public async Task<List<OptionFilterDto>> GetTargetQuestionResultsAsync(List<int> optionIds, int questionId)
         {
-            return await _answerRepository.GetQuestionParticipantPercentage(optionId, questionId);
+            return await _answerRepository.GetQuestionParticipantPercentage(optionIds, questionId);
+        }
+        public async Task<List<OptionFilterDto>> GetAllQuestionResultsAsync(List<int> optionIds,int researchId)
+        {
+            return await _answerRepository.GetResearchParticipantPercentage(optionIds,researchId);
         }
     }
 }

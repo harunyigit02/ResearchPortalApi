@@ -1,4 +1,5 @@
 ﻿using FinalProjectWebApi.Business.Abstract;
+using FinalProjectWebApi.Entities.Abstract;
 using FinalProjectWebApi.Entities.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -88,11 +89,21 @@ namespace FinalProjectWebApi.Controllers
             return Ok(answers);  // Başarılı yanıt olarak döndür
         }
 
-        [HttpGet("AnalyzeTargetQuestion")]
-        public async Task<IActionResult> GetTargetQuestionAnalyze(int optionId, int questionId)
+        [HttpPost("AnalyzeTargetQuestion")]
+        public async Task<IActionResult> GetTargetQuestionAnalyze([FromBody] FilterAnalyzeQuestionsDto dto)
         {
-            var result = await _answerService.GetTargetQuestionResultsAsync(optionId, questionId);
+            var result = await _answerService.GetTargetQuestionResultsAsync(dto.OptionIds, dto.QuestionId);
             if(result == null)
+            {
+                return NotFound("No Count Found");
+            }
+            return Ok(result);
+        }
+        [HttpPost("AnalyzeAllQuestions/{researchId}")]
+        public async Task<IActionResult> GetAllQuestionsAnalyze([FromBody] List<int> optionIds,int researchId)
+        {
+            var result = await _answerService.GetAllQuestionResultsAsync(optionIds,researchId);
+            if (result == null)
             {
                 return NotFound("No Count Found");
             }

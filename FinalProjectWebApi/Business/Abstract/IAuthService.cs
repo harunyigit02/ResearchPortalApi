@@ -1,4 +1,5 @@
-﻿using FinalProjectWebApi.Entities.Concrete;
+﻿using FinalProjectWebApi.Entities.Abstract;
+using FinalProjectWebApi.Entities.Concrete;
 
 namespace FinalProjectWebApi.Business.Abstract
 {
@@ -7,7 +8,9 @@ namespace FinalProjectWebApi.Business.Abstract
         Task Register(string email, string password);
         Task<string> Login(string email, string password);
         Task VerifyEmail(string email, string verificationCode);
-        Task<List<User>> GetUsersAsync();
+        Task<PagingResult<UserManageDto>> GetUsersAsync(int pageNumber, int pageSize, string? roleFilter, string? keyword, DateTime? minDate, DateTime? maxDate);
         Task UpdateUserRoleAsync(int userId, string newRole);
+        Task<UserManageDto> GetUserByUserIdAsync(int userId);
+
     }
 }
