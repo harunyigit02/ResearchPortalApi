@@ -100,7 +100,8 @@ namespace FinalProjectWebApi.Controllers
 
             if (userId == null)
             {
-                return Unauthorized("Geçersiz kullanıcı");
+                return Unauthorized("Invalid User");
+
             }
             if (role == "Admin" && role == "Researcher")
             {
